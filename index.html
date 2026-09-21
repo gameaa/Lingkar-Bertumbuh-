@@ -1,68 +1,41 @@
-```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mutabaah Digital & Leaderboard Lingkar Bertumbuh</title>
-  <!-- Tailwind CSS CDN -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Mutabaah & Leaderboard Digital</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Plus Jakarta Sans Font -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
   <style>
-    body { 
-      font-family: 'Plus Jakarta Sans', sans-serif; 
-      -webkit-tap-highlight-color: transparent;
-    }
-    .badge-target { background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
-    
-    /* Leaderboard Podium Styling */
-    .rank-1 { 
-      background: linear-gradient(135deg, #fef08a 0%, #facc15 100%); 
-      border: 2px solid #eab308;
-      box-shadow: 0 10px 15px -3px rgba(234, 179, 8, 0.3);
-    }
-    .rank-2 { 
-      background: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 100%); 
-      border: 2px solid #94a3b8;
-      box-shadow: 0 4px 6px -1px rgba(148, 163, 184, 0.2);
-    }
-    .rank-3 { 
-      background: linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%); 
-      border: 2px solid #f97316;
-      box-shadow: 0 4px 6px -1px rgba(249, 115, 22, 0.2);
-    }
-
-    /* Hide scrollbar for clean tab scrolling */
+    body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .gold-gradient { background: linear-gradient(135deg, #fef08a 0%, #facc15 100%); }
+    .silver-gradient { background: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 100%); }
+    .bronze-gradient { background: linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%); }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen pb-16">
+<body class="bg-slate-100 text-slate-800 min-h-screen pb-20 selection:bg-emerald-500 selection:text-white">
 
-  <!-- NAVIGATION HEADER -->
-  <header class="bg-emerald-800 text-white shadow-md sticky top-0 z-40">
-    <div class="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
-      
-      <!-- Logo & Group Title -->
+  <!-- TOAST NOTIFICATION -->
+  <div id="toastContainer" class="fixed top-4 right-4 left-4 md:left-auto z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- HEADER NAVBAR -->
+  <header class="bg-emerald-700 text-white shadow-md sticky top-0 z-40">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
       <div class="flex items-center gap-3">
-        <div id="headerLogoContainer" class="w-10 h-10 rounded-xl bg-emerald-700 flex items-center justify-center font-bold text-xl border border-emerald-500/40 overflow-hidden shadow-inner">
-          <span id="headerLogoText">🌱</span>
+        <div id="headerLogoContainer" class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center font-bold text-xl border border-emerald-400/30 shadow-inner overflow-hidden">
+          <span id="appLogo">🌱</span>
         </div>
         <div>
-          <h1 id="headerGroupName" class="font-extrabold text-base sm:text-lg leading-tight truncate max-w-[180px] sm:max-w-xs">
-            Lingkar Bertumbuh
-          </h1>
-          <p class="text-[11px] text-emerald-200">Murabbi: <span id="headerMurabbiName" class="font-semibold text-white">Rio Friyadi</span></p>
+          <h1 id="appTitle" class="font-extrabold text-base md:text-lg leading-tight">Lingkar Bertumbuh</h1>
+          <p class="text-[11px] text-emerald-200">Murabbi: <span id="appSubtitle" class="font-semibold text-white">Rio Friyadi</span></p>
         </div>
       </div>
       
-      <!-- Admin Mode Switcher -->
       <div class="flex items-center gap-2">
-        <span id="roleBadge" class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-emerald-900/80 text-emerald-100 border border-emerald-600/60 hidden sm:inline-block">
+        <span id="roleBadge" class="text-[10px] md:text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-800 text-emerald-100 border border-emerald-600">
           👤 Anggota
         </span>
         <button onclick="handleAdminToggle()" id="btnSwitchAdmin" class="bg-amber-500 hover:bg-amber-600 active:scale-95 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow transition flex items-center gap-1.5">
@@ -71,323 +44,233 @@
       </div>
     </div>
 
-    <!-- Scrollable Sub-Navigation Tabs -->
-    <div class="bg-emerald-900/90 backdrop-blur border-t border-emerald-700/60">
-      <div class="max-w-5xl mx-auto px-2 flex overflow-x-auto text-xs font-semibold text-emerald-100 no-scrollbar">
-        <button onclick="switchTab('tabLeaderboard')" id="nav-tabLeaderboard" class="px-3.5 py-2.5 border-b-2 border-amber-400 text-white flex items-center gap-1.5 whitespace-nowrap">
+    <!-- SUB-NAV TABS -->
+    <div class="bg-emerald-800/90 backdrop-blur border-t border-emerald-600/40">
+      <div class="max-w-4xl mx-auto px-2 flex overflow-x-auto text-xs font-semibold text-emerald-100 no-scrollbar">
+        <button onclick="switchTab('tabLeaderboard')" id="nav-tabLeaderboard" class="nav-tab px-4 py-3 border-b-2 border-amber-400 text-white flex items-center gap-2 whitespace-nowrap transition">
           <i class="fa-solid fa-trophy text-amber-300"></i> Leaderboard
         </button>
-        <button onclick="switchTab('tabForm')" id="nav-tabForm" class="px-3.5 py-2.5 border-b-2 border-transparent hover:text-white flex items-center gap-1.5 whitespace-nowrap">
+        <button onclick="switchTab('tabForm')" id="nav-tabForm" class="nav-tab px-4 py-3 border-b-2 border-transparent hover:text-white flex items-center gap-2 whitespace-nowrap transition">
           <i class="fa-solid fa-pen-to-square"></i> Mutabaah
         </button>
-        <button onclick="switchTab('tabMentoring')" id="nav-tabMentoring" class="px-3.5 py-2.5 border-b-2 border-transparent hover:text-white flex items-center gap-1.5 whitespace-nowrap">
-          <i class="fa-solid fa-camera"></i> Mentoring
+        <button onclick="switchTab('tabDashboard')" id="nav-tabDashboard" class="nav-tab px-4 py-3 border-b-2 border-transparent hover:text-white flex items-center gap-2 whitespace-nowrap transition">
+          <i class="fa-solid fa-chart-pie"></i> Rekap Murabbi
         </button>
-        <button onclick="switchTab('tabEvents')" id="nav-tabEvents" class="px-3.5 py-2.5 border-b-2 border-transparent hover:text-white flex items-center gap-1.5 whitespace-nowrap">
-          <i class="fa-solid fa-bullhorn"></i> Misi & Event
-        </button>
-        <button onclick="switchTab('tabDashboard')" id="nav-tabDashboard" class="px-3.5 py-2.5 border-b-2 border-transparent hover:text-white flex items-center gap-1.5 whitespace-nowrap">
-          <i class="fa-solid fa-chart-pie"></i> Rekap
-        </button>
-        <button onclick="switchTab('tabAdmin')" id="nav-tabAdmin" class="px-3.5 py-2.5 border-b-2 border-transparent hover:text-white flex items-center gap-1.5 whitespace-nowrap hidden admin-only">
-          <i class="fa-solid fa-sliders text-amber-300"></i> Pengaturan Admin
+        <button onclick="switchTab('tabAdmin')" id="nav-tabAdmin" class="nav-tab px-4 py-3 border-b-2 border-transparent hover:text-white flex items-center gap-2 whitespace-nowrap transition hidden admin-only">
+          <i class="fa-solid fa-sliders text-amber-300"></i> Kelola Sistem
         </button>
       </div>
     </div>
   </header>
 
-  <main class="max-w-5xl mx-auto px-3 sm:px-4 mt-4">
+  <main class="max-w-4xl mx-auto px-4 mt-5">
 
-    <!-- Status Server Sync Banner -->
-    <div id="syncStatus" class="mb-4 p-3 bg-white border border-slate-200 rounded-2xl shadow-sm flex justify-between items-center text-xs">
-      <div class="flex items-center gap-2 overflow-hidden">
-        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
-        <span class="text-slate-600 font-medium truncate">Database: <strong id="dbStatusText" class="text-slate-800">Tersimpan Lokal</strong></span>
+    <!-- STATUS CLOUD SYNC -->
+    <div class="mb-5 p-3 bg-white border border-slate-200 rounded-2xl shadow-sm flex items-center justify-between gap-3 text-xs">
+      <div class="flex items-center gap-2 text-slate-600 font-medium truncate">
+        <span class="relative flex h-2.5 w-2.5">
+          <span id="syncPing" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span id="syncDot" class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+        </span>
+        <span id="syncStatusText" class="truncate">Database Sync: Aktif</span>
       </div>
-      <button onclick="fetchDataFromCloud()" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold px-2.5 py-1 rounded-lg transition shrink-0">
-        <i class="fa-solid fa-rotate text-[10px] mr-1"></i> Sync Cloud
+      <button onclick="fetchDataFromCloud()" class="bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 font-bold px-3 py-1.5 rounded-xl transition flex items-center gap-1.5 shrink-0">
+        <i class="fa-solid fa-rotate text-xs"></i> Refresh
       </button>
     </div>
 
-    <!-- ================= TAB 1: KLASEMEN / LEADERBOARD ================= -->
-    <section id="tabLeaderboard" class="tab-content space-y-5">
-      <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200">
+    <!-- ================= TAB 1: LEADERBOARD ================= -->
+    <section id="tabLeaderboard" class="tab-content space-y-6">
+      <div class="bg-white p-5 md:p-6 rounded-3xl shadow-sm border border-slate-200">
         
-        <div class="text-center max-w-md mx-auto mb-6">
+        <div class="text-center max-w-sm mx-auto mb-6">
           <span class="bg-amber-100 text-amber-800 text-[11px] font-extrabold px-3 py-1 rounded-full border border-amber-200 inline-block mb-2">
             🏆 Fastabiqul Khairat
           </span>
-          <h2 class="text-xl font-extrabold text-slate-800">Klasemen Amalan Pekan Ini</h2>
-          <p class="text-xs text-slate-500 mt-1">Berlomba-lomba dalam kebaikan! Poin dihitung otomatis berdasarkan capaian mutabaah & kehadiran.</p>
+          <h2 class="text-xl font-extrabold text-slate-800">Klasemen Amalan Pekanan</h2>
+          <p class="text-xs text-slate-500 mt-1">Berlomba-lomba dalam kebaikan! Poin diperbarui otomatis dari laporan mutabaah.</p>
         </div>
 
-        <!-- Top 3 Podium (1st, 2nd, 3rd) -->
-        <div id="podiumSection" class="grid grid-cols-3 gap-2 sm:gap-4 mb-6 items-end">
-          <!-- Dynamic Podium content generated by JS -->
+        <!-- PODIUM 3 BESAR -->
+        <div id="podiumSection" class="grid grid-cols-3 gap-2 md:gap-4 mb-6 items-end">
+          <!-- Dynamic Podium Loaded via JS -->
         </div>
 
-        <!-- Full Ranking List -->
+        <!-- KLASEMEN LENGKAP -->
         <div class="space-y-2.5" id="rankingList">
-          <!-- Dynamic Leaderboard list items -->
+          <!-- Dynamic Leaderboard Items -->
         </div>
-
       </div>
     </section>
 
-    <!-- ================= TAB 2: FORM MUTABAAH ANGGOTA ================= -->
+    <!-- ================= TAB 2: FORM MUTABAAH ================= -->
     <section id="tabForm" class="tab-content hidden space-y-5">
       
-      <!-- Select Member -->
-      <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
-        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Pilih Nama Anggota / Kader:</label>
-        <select id="userSelect" class="w-full p-3 bg-slate-50 border border-slate-300 rounded-xl font-bold text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none" onchange="loadUserSavedData()">
+      <div class="bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-slate-200">
+        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Pilih Nama Anggota:</label>
+        <select id="userSelect" class="w-full p-3 bg-slate-50 border border-slate-300 rounded-xl font-bold text-slate-800 focus:ring-2 focus:ring-emerald-500 outline-none" onchange="loadUserSavedData()">
         </select>
       </div>
 
       <form id="mutabaahForm" onsubmit="saveMutabaah(event)" class="space-y-5">
         
         <!-- AMALAN YAUMI -->
-        <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-            <h2 class="font-bold text-slate-800 text-sm flex items-center gap-2">
-              <i class="fa-solid fa-kaaba text-emerald-600"></i> Amalan Yaumi (Pekanan)
-            </h2>
-            <span class="text-[10px] px-2 py-0.5 rounded-full badge-target font-semibold">Target Pekanan</span>
+        <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-200 space-y-4">
+          <div class="flex items-center justify-between border-b pb-3">
+            <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+              <i class="fa-solid fa-kaaba text-emerald-600"></i> Amalan Yaumi Pekanan
+            </h3>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">Target Pekan</span>
           </div>
 
           <!-- Tilawah -->
-          <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div>
-              <p class="font-bold text-xs sm:text-sm text-slate-800">📖 Tilawah Al-Qur'an (+20 pt/juz)</p>
-              <p class="text-[11px] text-slate-500">Target Min: ½ Juz / hari (Total 3.5 Juz / pekan)</p>
+              <p class="font-bold text-sm text-slate-800">📖 Tilawah Al-Qur'an <span class="text-xs font-normal text-emerald-600 font-semibold">(+20 pt/juz)</span></p>
+              <p class="text-[11px] text-slate-500">Target Min: 3.5 Juz / pekan</p>
             </div>
-            <div class="flex items-center gap-2 self-end sm:self-auto">
-              <input type="number" step="0.5" id="tilawahJuz" placeholder="0" min="0" class="w-20 p-2 bg-white border border-slate-300 rounded-lg font-bold text-center text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
-              <span class="text-xs font-semibold text-slate-600">Juz</span>
+            <div class="flex items-center gap-2">
+              <input type="number" step="0.5" id="tilawahJuz" placeholder="0" min="0" class="w-24 p-2 bg-white border border-slate-300 rounded-xl font-bold text-center text-sm outline-none focus:border-emerald-500">
+              <span class="text-xs font-bold text-slate-600">Juz</span>
             </div>
           </div>
 
           <!-- Sholat Jamaah -->
-          <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div>
-              <p class="font-bold text-xs sm:text-sm text-slate-800">🕌 Shalat Jamaah Masjid (+2 pt/waktu)</p>
-              <p class="text-[11px] text-slate-500">Target Max: 5 Waktu x 7 Hari (Total 35 Waktu)</p>
+              <p class="font-bold text-sm text-slate-800">🕌 Shalat Jamaah di Masjid <span class="text-xs font-normal text-emerald-600 font-semibold">(+2 pt/waktu)</span></p>
+              <p class="text-[11px] text-slate-500">Target Min: 35 Waktu / pekan</p>
             </div>
-            <div class="flex items-center gap-2 self-end sm:self-auto">
-              <input type="number" id="sholatMasjid" placeholder="0" min="0" max="35" class="w-20 p-2 bg-white border border-slate-300 rounded-lg font-bold text-center text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
-              <span class="text-xs font-semibold text-slate-600">Waktu</span>
+            <div class="flex items-center gap-2">
+              <input type="number" id="sholatMasjid" placeholder="0" min="0" max="35" class="w-24 p-2 bg-white border border-slate-300 rounded-xl font-bold text-center text-sm outline-none focus:border-emerald-500">
+              <span class="text-xs font-bold text-slate-600">Waktu</span>
             </div>
           </div>
 
           <!-- Dhuha -->
-          <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div>
-              <p class="font-bold text-xs sm:text-sm text-slate-800">☀️ Shalat Dhuha (+10 pt/hari)</p>
-              <p class="text-[11px] text-slate-500">Target Min: 3x / pekan</p>
+              <p class="font-bold text-sm text-slate-800">☀️ Shalat Dhuha <span class="text-xs font-normal text-emerald-600 font-semibold">(+10 pt/hari)</span></p>
+              <p class="text-[11px] text-slate-500">Target Min: 3 Hari / pekan</p>
             </div>
-            <div class="flex items-center gap-2 self-end sm:self-auto">
-              <input type="number" id="dhuhaHari" placeholder="0" min="0" max="7" class="w-20 p-2 bg-white border border-slate-300 rounded-lg font-bold text-center text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
-              <span class="text-xs font-semibold text-slate-600">Hari</span>
+            <div class="flex items-center gap-2">
+              <input type="number" id="dhuhaHari" placeholder="0" min="0" max="7" class="w-24 p-2 bg-white border border-slate-300 rounded-xl font-bold text-center text-sm outline-none focus:border-emerald-500">
+              <span class="text-xs font-bold text-slate-600">Hari</span>
             </div>
           </div>
 
           <!-- Tahajud -->
-          <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div>
-              <p class="font-bold text-xs sm:text-sm text-slate-800">🌙 Shalat Tahajud (+15 pt/hari)</p>
-              <p class="text-[11px] text-slate-500">Target Min: 2x / pekan</p>
+              <p class="font-bold text-sm text-slate-800">🌙 Shalat Tahajud <span class="text-xs font-normal text-emerald-600 font-semibold">(+15 pt/hari)</span></p>
+              <p class="text-[11px] text-slate-500">Target Min: 2 Hari / pekan</p>
             </div>
-            <div class="flex items-center gap-2 self-end sm:self-auto">
-              <input type="number" id="tahajudHari" placeholder="0" min="0" max="7" class="w-20 p-2 bg-white border border-slate-300 rounded-lg font-bold text-center text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
-              <span class="text-xs font-semibold text-slate-600">Hari</span>
+            <div class="flex items-center gap-2">
+              <input type="number" id="tahajudHari" placeholder="0" min="0" max="7" class="w-24 p-2 bg-white border border-slate-300 rounded-xl font-bold text-center text-sm outline-none focus:border-emerald-500">
+              <span class="text-xs font-bold text-slate-600">Hari</span>
             </div>
           </div>
         </div>
 
         <!-- SARANA TARBIYAH -->
-        <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-          <div class="border-b border-slate-100 pb-3">
-            <h2 class="font-bold text-slate-800 text-sm flex items-center gap-2">
-              <i class="fa-solid fa-graduation-cap text-emerald-600"></i> Kehadiran Agenda (+20 pt/hadir)
-            </h2>
+        <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-200 space-y-4">
+          <div class="border-b pb-3">
+            <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+              <i class="fa-solid fa-graduation-cap text-emerald-600"></i> Kehadiran & Target Hafalan
+            </h3>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 space-y-2">
-              <label class="font-bold text-xs text-slate-800 block">1. Tasqif / Ta'lim</label>
-              <select id="statusTasqif" class="w-full p-2 bg-white border border-slate-300 rounded-lg text-xs font-medium">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 space-y-1.5">
+              <label class="font-bold text-xs text-slate-700 block">Tasqif Pekanan</label>
+              <select id="statusTasqif" class="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-800 outline-none">
                 <option value="Hadir">✅ Hadir (+20 pt)</option>
                 <option value="Izin">🟡 Izin (+5 pt)</option>
                 <option value="Alfa">❌ Tidak Hadir (0 pt)</option>
                 <option value="Belum Ada">⏳ Belum Ada Agenda</option>
               </select>
-              <input type="text" id="catatanTasqif" placeholder="Catatan/Tema Tasqif..." class="w-full p-2 text-xs bg-white border border-slate-200 rounded-lg">
             </div>
 
-            <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 space-y-2">
-              <label class="font-bold text-xs text-slate-800 block">2. Mabit / Qiyam</label>
-              <select id="statusMabit" class="w-full p-2 bg-white border border-slate-300 rounded-lg text-xs font-medium">
+            <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 space-y-1.5">
+              <label class="font-bold text-xs text-slate-700 block">Mabit / Agenda Ruhiyah</label>
+              <select id="statusMabit" class="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-800 outline-none">
                 <option value="Hadir">✅ Hadir (+20 pt)</option>
                 <option value="Izin">🟡 Izin (+5 pt)</option>
                 <option value="Alfa">❌ Tidak Hadir (0 pt)</option>
                 <option value="Belum Ada">⏳ Belum Ada Agenda</option>
               </select>
-              <input type="text" id="catatanMabit" placeholder="Catatan Mabit..." class="w-full p-2 text-xs bg-white border border-slate-200 rounded-lg">
             </div>
-          </div>
-        </div>
 
-        <!-- TAHSIN & TARGET HAFALAN -->
-        <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-          <div class="border-b border-slate-100 pb-3">
-            <h2 class="font-bold text-slate-800 text-sm flex items-center gap-2">
-              <i class="fa-solid fa-book-quran text-emerald-600"></i> Tahsin & Hafalan (+15 pt)
-            </h2>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div class="space-y-1.5">
-              <label class="font-bold text-xs text-slate-800 block">Tahsin Al-Qur'an</label>
-              <select id="statusTahsin" class="w-full p-2 bg-white border border-slate-300 rounded-lg text-xs font-medium">
+            <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 space-y-1.5">
+              <label class="font-bold text-xs text-slate-700 block">Tahsin Al-Qur'an</label>
+              <select id="statusTahsin" class="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-800 outline-none">
                 <option value="Sudah Setoran">✅ Sudah Setoran (+15 pt)</option>
                 <option value="Perbaikan">🟡 Perbaikan / Mengulang (+10 pt)</option>
                 <option value="Belum Setoran">❌ Belum Setoran (0 pt)</option>
               </select>
-              <input type="text" id="materiTahsin" placeholder="Halaman / Surah..." class="w-full p-2 text-xs bg-white border border-slate-200 rounded-lg">
             </div>
 
-            <div class="space-y-1.5">
-              <label class="font-bold text-xs text-slate-800 block">Target Hafalan (Ziyadah)</label>
-              <select id="statusHafalan" class="w-full p-2 bg-white border border-slate-300 rounded-lg text-xs font-medium">
-                <option value="Tercapai">🎯 Target Achieved (+15 pt)</option>
+            <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 space-y-1.5">
+              <label class="font-bold text-xs text-slate-700 block">Target Hafalan (Ziyadah)</label>
+              <select id="statusHafalan" class="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-800 outline-none">
+                <option value="Tercapai">🎯 Target Tercapai (+15 pt)</option>
                 <option value="Progress">⏳ On Progress (+10 pt)</option>
                 <option value="Belum Setor">❌ Belum Setor (0 pt)</option>
               </select>
-              <input type="text" id="detailHafalan" placeholder="Contoh: Surah Al-Mulk 1-15..." class="w-full p-2 text-xs bg-white border border-slate-200 rounded-lg">
             </div>
           </div>
 
           <div>
-            <label class="font-bold text-xs text-slate-800 block mb-1">Catatan Kendala & Evaluation Pekan Ini:</label>
-            <textarea id="catatanKendala" rows="2" placeholder="Tuliskan kendala atau ikhtiar perbaikan..." class="w-full p-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none"></textarea>
+            <label class="font-bold text-xs text-slate-700 block mb-1">Catatan / Kendala Pekan Ini:</label>
+            <textarea id="catatanKendala" rows="2" placeholder="Tuliskan kendala atau ikhtiar perbaikan..." class="w-full p-3 text-xs bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-emerald-500"></textarea>
           </div>
         </div>
 
-        <div class="flex flex-col sm:flex-row gap-3 pt-2">
-          <button type="submit" id="btnSaveMutabaah" class="flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-98 text-white font-bold py-3.5 px-5 rounded-xl shadow-md transition flex items-center justify-center gap-2 text-sm">
-            <i class="fa-solid fa-cloud-arrow-up"></i> Simpan Mutabaah
+        <!-- ACTION BUTTONS -->
+        <div class="flex flex-col sm:flex-row gap-3">
+          <button type="submit" id="btnSaveMutabaah" class="flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Simpan Ke Database Cloud
           </button>
-          <button type="button" onclick="generateAndSendWA()" class="bg-emerald-800 hover:bg-emerald-900 active:scale-98 text-white font-bold py-3.5 px-5 rounded-xl shadow-md transition flex items-center justify-center gap-2 text-sm">
-            <i class="fa-brands fa-whatsapp text-base"></i> Kirim Rekap WA
+          <button type="button" onclick="sendWAData()" class="bg-emerald-800 hover:bg-emerald-900 active:scale-95 text-white font-bold py-3.5 px-5 rounded-2xl shadow-lg transition flex items-center justify-center gap-2">
+            <i class="fa-brands fa-whatsapp text-lg"></i> Send WA
           </button>
         </div>
 
       </form>
     </section>
 
-    <!-- ================= TAB 3: ABSEN MENTORING ================= -->
-    <section id="tabMentoring" class="tab-content hidden space-y-5">
-      <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5">
-        <div class="border-b border-slate-100 pb-3">
-          <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
-            <i class="fa-solid fa-camera text-emerald-600"></i> Absensi Mentoring Pekanan & Dokumentasi
-          </h2>
-        </div>
-
-        <form id="mentoringForm" onsubmit="submitMentoringAbsen(event)" class="space-y-4">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">Nama Kader:</label>
-              <select id="mentoringUserSelect" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-emerald-500 outline-none"></select>
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">Status Kehadiran:</label>
-              <select id="mentoringStatus" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-emerald-500 outline-none">
-                <option value="Hadir">✅ Hadir Mentoring</option>
-                <option value="Izin">🟡 Izin (Udzur Syar'i)</option>
-                <option value="Alfa">❌ Tidak Hadir</option>
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Foto Bukti / Dokumentasi Mentoring:</label>
-            <input type="file" id="mentoringPhoto" accept="image/*" onchange="previewMentoringImage(this)" class="w-full p-2 bg-slate-50 border border-slate-300 rounded-xl text-xs">
-          </div>
-
-          <div id="photoPreviewContainer" class="hidden">
-            <img id="photoPreview" src="" alt="Bukti Mentoring" class="max-h-48 rounded-xl border border-slate-200 object-cover">
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Topik Pembahasan Pekan Ini:</label>
-            <input type="text" id="mentoringTopic" placeholder="Judul materi / perbincangan..." class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
-          </div>
-
-          <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow transition text-xs">
-            Simpan Absensi Mentoring
-          </button>
-        </form>
-
-        <div class="mt-6 border-t border-slate-100 pt-4">
-          <h3 class="font-bold text-slate-800 text-xs mb-3 flex items-center gap-2">
-            <i class="fa-solid fa-clock-rotate-left text-emerald-600"></i> Riwayat Dokumentasi Mentoring:
-          </h3>
-          <div id="mentoringLogList" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= TAB 4: MISI & EVENT ================= -->
-    <section id="tabEvents" class="tab-content hidden space-y-5">
-      <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-        <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-          <div>
-            <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
-              <i class="fa-solid fa-bullhorn text-emerald-600"></i> Misi & Event Pekanan
-            </h2>
-            <p class="text-xs text-slate-500">Tugas khusus dan program pembinaan kader.</p>
-          </div>
-          <button onclick="openCreateEventModal()" class="admin-only hidden bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow transition">
-            + Tambah Misi
-          </button>
-        </div>
-        <div id="eventList" class="space-y-3"></div>
-      </div>
-    </section>
-
-    <!-- ================= TAB 5: REKAP MURABBI ================= -->
+    <!-- ================= TAB 3: REKAP MURABBI ================= -->
     <section id="tabDashboard" class="tab-content hidden space-y-5">
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm text-center">
-          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total Kader</p>
-          <p id="statTotalKader" class="text-xl font-black text-slate-800 mt-1">0</p>
-          <p class="text-[10px] text-emerald-600 font-semibold mt-0.5">Aktif Lingkar</p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center">
+          <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Total Kader</p>
+          <p id="statTotalKader" class="text-2xl font-black text-slate-800 mt-0.5">0</p>
+          <p class="text-[10px] text-emerald-600 font-bold">Anggota</p>
         </div>
-        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm text-center">
-          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Rata Tilawah</p>
-          <p id="statAvgTilawah" class="text-xl font-black text-emerald-600 mt-1">0 Juz</p>
-          <p class="text-[10px] text-slate-400 mt-0.5">Target: 3.5 Juz</p>
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center">
+          <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Avg Tilawah</p>
+          <p id="statAvgTilawah" class="text-2xl font-black text-emerald-600 mt-0.5">0 Jz</p>
+          <p class="text-[10px] text-slate-400 font-semibold">Target: 3.5 Jz</p>
         </div>
-        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm text-center">
-          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Sholat Masjid</p>
-          <p id="statAvgMasjid" class="text-xl font-black text-emerald-600 mt-1">0 / 35</p>
-          <p class="text-[10px] text-slate-400 mt-0.5">Rata-rata Waktu</p>
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center">
+          <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Sholat Masjid</p>
+          <p id="statAvgMasjid" class="text-2xl font-black text-emerald-600 mt-0.5">0 / 35</p>
+          <p class="text-[10px] text-slate-400 font-semibold">Rata-rata Waktu</p>
         </div>
-        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm text-center">
-          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Kehadiran</p>
-          <p id="statMentoringCount" class="text-xl font-black text-amber-500 mt-1">0 %</p>
-          <p class="text-[10px] text-slate-400 mt-0.5">Absensi Mentoring</p>
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center">
+          <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Kader Aktif</p>
+          <p id="statActiveKader" class="text-2xl font-black text-amber-500 mt-0.5">0</p>
+          <p class="text-[10px] text-slate-400 font-semibold">Sudah Mengisi</p>
         </div>
       </div>
 
-      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div class="p-3.5 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+      <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="p-4 border-b bg-slate-50 flex justify-between items-center">
           <h3 class="font-bold text-slate-800 text-xs flex items-center gap-2">
-            <i class="fa-solid fa-table-list text-emerald-600"></i> Tabel Rekap Anggota
+            <i class="fa-solid fa-list-check text-emerald-600"></i> Rekap Pekanan Seluruh Anggota
           </h3>
-          <button onclick="copyGroupWARecap()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow transition">
-            <i class="fa-brands fa-whatsapp mr-1"></i> Salin Rekap WA
+          <button onclick="copyWACollectiveRecap()" class="bg-emerald-700 hover:bg-emerald-800 active:scale-95 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow transition flex items-center gap-1.5">
+            <i class="fa-brands fa-whatsapp"></i> Rekap Group WA
           </button>
         </div>
 
@@ -398,9 +281,9 @@
                 <th class="p-3">Nama Anggota</th>
                 <th class="p-3">Poin</th>
                 <th class="p-3">Tilawah</th>
-                <th class="p-3">Sholat Masjid</th>
-                <th class="p-3">Dhuha / Tahajud</th>
-                <th class="p-3">Tasqif / Mabit</th>
+                <th class="p-3">Masjid</th>
+                <th class="p-3">Dhuha/Tahajud</th>
+                <th class="p-3">Tasqif/Mabit</th>
                 <th class="p-3">Status Sync</th>
               </tr>
             </thead>
@@ -410,148 +293,149 @@
       </div>
     </section>
 
-    <!-- ================= TAB 6: PENGATURAN ADMIN ================= -->
+    <!-- ================= TAB 4: KELOLA ADMIN & SISTEM ================= -->
     <section id="tabAdmin" class="tab-content hidden space-y-5">
-      <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+      
+      <!-- DATABASE GOOGLE SHEETS LINK -->
+      <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-200 space-y-3">
+        <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+          <i class="fa-solid fa-cloud-arrow-up text-emerald-600"></i> Link Database Google Apps Script
+        </h3>
+        <p class="text-xs text-slate-500">Masukkan URL Web App dari Google Apps Script untuk menghubungkan web ke Google Sheets Murabbi.</p>
+        <div class="flex gap-2">
+          <input type="text" id="scriptUrlInput" placeholder="https://script.google.com/macros/s/.../exec" class="flex-1 p-3 bg-slate-50 border border-slate-300 rounded-xl text-xs font-mono outline-none">
+          <button onclick="saveScriptUrl()" class="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold px-4 py-3 rounded-xl text-xs shrink-0">
+            Simpan Link
+          </button>
+        </div>
+      </div>
+
+      <!-- FITUR RESET DATA & LEADERBOARD -->
+      <div class="bg-white p-5 rounded-3xl shadow-sm border border-rose-200 space-y-4">
+        <h3 class="font-bold text-rose-700 text-sm flex items-center gap-2">
+          <i class="fa-solid fa-arrow-rotate-left"></i> Reset Leaderboard & Data
+        </h3>
+        <p class="text-xs text-slate-500">Gunakan opsi ini saat memulai pekan baru atau bulan baru untuk mengosongkan klasemen.</p>
         
-        <div class="border-b border-slate-100 pb-3 flex justify-between items-center">
-          <div>
-            <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
-              <i class="fa-solid fa-sliders text-amber-500"></i> Pusat Kendali Admin
-            </h2>
-            <p class="text-xs text-slate-500">Kelola identitas, reset data, PIN, dan integrasi cloud.</p>
-          </div>
-          <span class="text-[10px] bg-amber-100 text-amber-800 font-bold px-2.5 py-1 rounded-full border border-amber-200">
-            Admin Active
-          </span>
-        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button onclick="confirmResetData('weekly')" class="p-3 bg-amber-50 border border-amber-200 hover:bg-amber-100 rounded-2xl text-left text-amber-900 transition">
+            <p class="font-bold text-xs flex items-center gap-1.5">
+              <i class="fa-solid fa-calendar-minus"></i> Reset Pekanan (Mingguan)
+            </p>
+            <p class="text-[11px] text-amber-700 mt-1">Nol-kan skor & poin amalan untuk mulai pekan baru (Daftar nama kader tetap ada).</p>
+          </button>
 
-        <!-- Section A: Customization (Logo & Group Name) -->
-        <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
-          <h3 class="font-bold text-slate-800 text-xs flex items-center gap-2">
-            <i class="fa-solid fa-paintbrush text-emerald-600"></i> Identitas Group & Logo
-          </h3>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div>
-              <label class="block text-[11px] font-bold text-slate-600 mb-1">Logo (Emoji / URL Gambar):</label>
-              <input type="text" id="adminLogoInput" placeholder="🌱 atau https://..." class="w-full p-2 bg-white border border-slate-300 rounded-lg text-xs">
-            </div>
-            <div>
-              <label class="block text-[11px] font-bold text-slate-600 mb-1">Nama Group / Lingkar:</label>
-              <input type="text" id="adminGroupNameInput" placeholder="Lingkar Bertumbuh" class="w-full p-2 bg-white border border-slate-300 rounded-lg text-xs">
-            </div>
-            <div>
-              <label class="block text-[11px] font-bold text-slate-600 mb-1">Nama Murabbi:</label>
-              <input type="text" id="adminMurabbiInput" placeholder="Rio Friyadi" class="w-full p-2 bg-white border border-slate-300 rounded-lg text-xs">
-            </div>
-          </div>
-          <button onclick="saveGroupIdentity()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-lg text-xs shadow transition">
-            Simpan Perubahan Identitas
+          <button onclick="confirmResetData('full')" class="p-3 bg-rose-50 border border-rose-200 hover:bg-rose-100 rounded-2xl text-left text-rose-900 transition">
+            <p class="font-bold text-xs flex items-center gap-1.5">
+              <i class="fa-solid fa-trash-can"></i> Reset Total (Hapus Semua)
+            </p>
+            <p class="text-[11px] text-rose-700 mt-1">Hapus seluruh data riwayat mutabaah dan kembalikan ke pengaturan awal.</p>
           </button>
         </div>
+      </div>
 
-        <!-- Section B: Reset Data & Leaderboard -->
-        <div class="p-4 bg-red-50/70 border border-red-200 rounded-xl space-y-3">
-          <h3 class="font-bold text-red-900 text-xs flex items-center gap-2">
-            <i class="fa-solid fa-arrows-rotate text-red-600"></i> Reset Leaderboard & Data Mutabaah
+      <!-- KUSTOMISASI WEB & GANTI PIN ADMIN -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        
+        <!-- Setting Identitas Web -->
+        <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-200 space-y-3">
+          <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+            <i class="fa-solid fa-pen-ruler text-emerald-600"></i> Identitas Kelompok & Logo
           </h3>
-          <p class="text-[11px] text-red-700 leading-relaxed">
-            Gunakan fitur ini untuk mereset poin leaderboard setiap pekan atau setiap bulan.
-          </p>
-          <div class="flex flex-col sm:flex-row gap-2 pt-1">
-            <button onclick="confirmResetPekanan()" class="bg-amber-600 hover:bg-amber-700 text-white font-bold px-4 py-2 rounded-lg text-xs shadow transition flex items-center justify-center gap-1.5">
-              <i class="fa-solid fa-calendar-minus"></i> Reset Data Pekan Ini (Mulai Pekan Baru)
-            </button>
-            <button onclick="confirmResetTotal()" class="bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2 rounded-lg text-xs shadow transition flex items-center justify-center gap-1.5">
-              <i class="fa-solid fa-trash-can"></i> Reset Total Semua Data
+          <div class="space-y-2">
+            <div>
+              <label class="text-[11px] font-bold text-slate-600">Nama Kelompok:</label>
+              <input type="text" id="cfgGroupName" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800">
+            </div>
+            <div>
+              <label class="text-[11px] font-bold text-slate-600">Logo (Emoji atau URL Gambar):</label>
+              <input type="text" id="cfgGroupLogo" placeholder="Contoh: 🌱 atau https://..." class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800">
+            </div>
+            <div>
+              <label class="text-[11px] font-bold text-slate-600">Nama Murabbi:</label>
+              <input type="text" id="cfgMurabbiName" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800">
+            </div>
+            <button onclick="saveWebIdentity()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 rounded-xl text-xs">
+              Simpan Identitas
             </button>
           </div>
         </div>
 
-        <!-- Section C: Change Admin PIN -->
-        <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
-          <h3 class="font-bold text-slate-800 text-xs flex items-center gap-2">
-            <i class="fa-solid fa-key text-amber-500"></i> Ubah PIN Admin
+        <!-- Setting Ganti PIN -->
+        <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-200 space-y-3">
+          <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+            <i class="fa-solid fa-key text-amber-500"></i> Ganti PIN Admin
           </h3>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="space-y-2">
             <div>
-              <label class="block text-[11px] font-bold text-slate-600 mb-1">PIN Lama:</label>
-              <input type="password" id="adminOldPinInput" placeholder="****" class="w-full p-2 bg-white border border-slate-300 rounded-lg text-xs">
+              <label class="text-[11px] font-bold text-slate-600">PIN Baru (Angka):</label>
+              <input type="password" id="newPinInput" maxlength="8" placeholder="Masukkan PIN baru..." class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800">
             </div>
-            <div>
-              <label class="block text-[11px] font-bold text-slate-600 mb-1">PIN Baru:</label>
-              <input type="password" id="adminNewPinInput" placeholder="****" class="w-full p-2 bg-white border border-slate-300 rounded-lg text-xs">
-            </div>
-          </div>
-          <button onclick="changeAdminPin()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold px-4 py-2 rounded-lg text-xs shadow transition">
-            Perbarui PIN Admin
-          </button>
-        </div>
-
-        <!-- Section D: Google Sheets Script Link -->
-        <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl space-y-2">
-          <h3 class="font-bold text-emerald-900 text-xs flex items-center gap-2">
-            <i class="fa-solid fa-cloud-arrow-up text-emerald-600"></i> Google Apps Script URL (Database Cloud)
-          </h3>
-          <input type="text" id="scriptUrlInput" placeholder="https://script.google.com/macros/s/.../exec" class="w-full p-2.5 bg-white border border-emerald-300 rounded-lg text-xs font-mono">
-          <button onclick="saveScriptUrl()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-4 py-2 rounded-lg text-xs shadow transition">
-            Simpan Link Database Google Sheets
-          </button>
-        </div>
-
-        <!-- Section E: Manage Members -->
-        <div class="space-y-3">
-          <h3 class="font-bold text-slate-800 text-xs flex items-center gap-2">
-            <i class="fa-solid fa-users text-emerald-600"></i> Kelola Anggota Kader
-          </h3>
-          <form onsubmit="addNewMember(event)" class="flex gap-2">
-            <input type="text" id="newMemberName" placeholder="Nama Anggota Baru..." required class="flex-1 p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
-            <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow transition">
-              + Tambah
+            <button onclick="changeAdminPin()" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-2.5 rounded-xl text-xs">
+              Ubah PIN Admin
             </button>
-          </form>
-          <ul id="memberAdminList" class="divide-y divide-slate-100 bg-slate-50 rounded-xl border border-slate-200 overflow-hidden"></ul>
+          </div>
         </div>
 
       </div>
+
+      <!-- KELOLA ANGGOTA KADER -->
+      <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-200 space-y-4">
+        <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+          <i class="fa-solid fa-users text-emerald-600"></i> Kelola Daftar Anggota
+        </h3>
+        
+        <form onsubmit="addNewMember(event)" class="flex gap-2">
+          <input type="text" id="newMemberName" placeholder="Nama Anggota Baru..." required class="flex-1 p-3 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 outline-none">
+          <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold px-5 py-3 rounded-xl text-xs">
+            + Tambah
+          </button>
+        </form>
+
+        <ul id="memberAdminList" class="divide-y divide-slate-100 bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden text-xs font-medium"></ul>
+      </div>
+
     </section>
 
   </main>
 
-  <!-- CUSTOM UI MODAL DIALOG (Compliant with no alert/confirm rule) -->
-  <div id="customModalOverlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white w-full max-w-sm rounded-2xl shadow-xl border border-slate-100 overflow-hidden transform transition-all p-5 space-y-4">
-      <div class="flex items-center gap-3">
-        <div id="modalIconBg" class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-lg shrink-0">
-          <i id="modalIcon" class="fa-solid fa-circle-info"></i>
-        </div>
-        <div>
-          <h3 id="modalTitle" class="font-extrabold text-slate-800 text-sm">Informasi</h3>
-          <p id="modalSubtitle" class="text-[11px] text-slate-500">Pemberitahuan Sistem</p>
-        </div>
+  <!-- MODAL: ADMIN LOGIN -->
+  <div id="modalAdminLogin" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl p-6 w-full max-w-xs shadow-2xl space-y-4 text-center">
+      <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center mx-auto text-xl">
+        <i class="fa-solid fa-lock"></i>
       </div>
-
-      <p id="modalMessage" class="text-xs text-slate-600 leading-relaxed">
-        Pesan modal akan muncul di sini.
-      </p>
-
-      <div id="modalInputContainer" class="hidden">
-        <input type="password" id="modalInput" placeholder="Masukkan PIN Admin..." class="w-full p-2.5 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-emerald-500 outline-none">
+      <div>
+        <h3 class="font-extrabold text-slate-800 text-base">Akses Admin</h3>
+        <p class="text-xs text-slate-500 mt-0.5">Masukkan PIN Admin untuk mengelola sistem.</p>
       </div>
+      <input type="password" id="inputModalPin" placeholder="****" maxlength="8" class="w-full p-3 bg-slate-100 border border-slate-300 rounded-2xl text-center font-bold text-lg tracking-widest outline-none focus:ring-2 focus:ring-amber-500">
+      <div class="flex gap-2">
+        <button onclick="closeAdminModal()" class="flex-1 p-3 bg-slate-100 text-slate-700 font-bold rounded-2xl text-xs">Batal</button>
+        <button onclick="submitAdminLogin()" class="flex-1 p-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl text-xs shadow-md">Masuk</button>
+      </div>
+    </div>
+  </div>
 
-      <div class="flex gap-2 pt-2 justify-end" id="modalActions">
-        <button id="modalCancelBtn" onclick="closeCustomModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition">
-          Batal
-        </button>
-        <button id="modalConfirmBtn" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow transition">
-          OK
-        </button>
+  <!-- MODAL: CONFIRMATION -->
+  <div id="modalConfirm" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl p-6 w-full max-w-xs shadow-2xl space-y-4 text-center">
+      <div id="modalConfirmIcon" class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center mx-auto text-xl">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+      <div>
+        <h3 id="modalConfirmTitle" class="font-extrabold text-slate-800 text-base">Konfirmasi</h3>
+        <p id="modalConfirmText" class="text-xs text-slate-500 mt-1">Apakah Anda yakin?</p>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="closeConfirmModal()" class="flex-1 p-3 bg-slate-100 text-slate-700 font-bold rounded-2xl text-xs">Batal</button>
+        <button id="btnConfirmAction" class="flex-1 p-3 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-2xl text-xs shadow-md">Ya, Lanjutkan</button>
       </div>
     </div>
   </div>
 
   <script>
-    // Default initial state
+    // DATA DEFAULT & INITIAL STATE
     const DEFAULT_MEMBERS = [
       "Alif Akbar", "Fadly Rasyid", "Faris Audah", "Muhammad Jamil Batin",
       "Adri Musyarifudin", "Ikbal Khairi", "Nurwalid Raihan", "Arizal", "Hendra Yulianto"
@@ -559,143 +443,89 @@
 
     let state = {
       isAdmin: false,
-      adminPin: "1234",
-      logo: "🌱",
-      groupName: "Lingkar Bertumbuh",
-      murabbiName: "Rio Friyadi",
-      scriptUrl: "",
-      members: [],
-      records: {},
-      mentoringLogs: [],
-      events: [
-        { id: 1, title: "Membaca Buku Siroh Nabawiyah", desc: "Membaca bab 1 - 3 pekan ini", date: "Pekan Ini" }
-      ]
+      adminPin: localStorage.getItem("lb_pin") || "1234",
+      groupName: localStorage.getItem("lb_group_name") || "Lingkar Bertumbuh",
+      groupLogo: localStorage.getItem("lb_group_logo") || "🌱",
+      murabbiName: localStorage.getItem("lb_murabbi_name") || "Rio Friyadi",
+      scriptUrl: localStorage.getItem("lb_script_url") || "",
+      members: JSON.parse(localStorage.getItem("lb_members")) || [...DEFAULT_MEMBERS],
+      records: JSON.parse(localStorage.getItem("lb_records")) || {}
     };
 
+    // ON LOAD INITIALIZATION
     window.onload = function() {
-      loadLocalStorage();
-      applyGroupIdentity();
+      applyWebIdentity();
       renderMemberDropdowns();
       renderMemberListAdmin();
       loadUserSavedData();
-      renderMentoringLogs();
-      renderEvents();
-      
+
       if (state.scriptUrl) {
+        document.getElementById("scriptUrlInput").value = state.scriptUrl;
         fetchDataFromCloud();
       } else {
+        updateSyncStatus(false, "Belum Konek Database Cloud");
         renderDashboard();
         renderLeaderboard();
       }
     };
 
-    function loadLocalStorage() {
-      const savedState = localStorage.getItem("lb_app_state");
-      if (savedState) {
-        try {
-          const parsed = JSON.parse(savedState);
-          state = { ...state, ...parsed };
-        } catch (e) {
-          console.error("Error loading local storage state", e);
-        }
-      }
+    // SHOW TOAST NOTIFICATION
+    function showToast(msg, type = "success") {
+      const container = document.getElementById("toastContainer");
+      const toast = document.createElement("div");
+      const bg = type === "success" ? "bg-emerald-800 text-white" : "bg-rose-800 text-white";
+      const icon = type === "success" ? "fa-circle-check" : "fa-circle-xmark";
+
+      toast.className = `${bg} pointer-events-auto p-3.5 rounded-2xl shadow-xl text-xs font-bold flex items-center gap-2.5 transition-all duration-300 transform translate-y-2 opacity-0`;
+      toast.innerHTML = `<i class="fa-solid ${icon} text-base"></i> <span>${msg}</span>`;
+
+      container.appendChild(toast);
+      setTimeout(() => toast.classList.remove("translate-y-2", "opacity-0"), 10);
+      setTimeout(() => {
+        toast.classList.add("opacity-0", "-translate-y-2");
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // IDENTITY MANAGEMENT
+    function applyWebIdentity() {
+      document.getElementById("appTitle").innerText = state.groupName;
+      document.getElementById("appSubtitle").innerText = state.murabbiName;
       
-      if (!state.members || state.members.length === 0) {
-        state.members = [...DEFAULT_MEMBERS];
-      }
-
-      // Fill admin inputs
-      document.getElementById("adminLogoInput").value = state.logo || "🌱";
-      document.getElementById("adminGroupNameInput").value = state.groupName || "Lingkar Bertumbuh";
-      document.getElementById("adminMurabbiInput").value = state.murabbiName || "Rio Friyadi";
-      document.getElementById("scriptUrlInput").value = state.scriptUrl || "";
-    }
-
-    function saveState() {
-      localStorage.setItem("lb_app_state", JSON.stringify(state));
-    }
-
-    function applyGroupIdentity() {
-      document.getElementById("headerGroupName").innerText = state.groupName;
-      document.getElementById("headerMurabbiName").innerText = state.murabbiName;
-      
-      const logoEl = document.getElementById("headerLogoContainer");
-      if (state.logo.startsWith("http://") || state.logo.startsWith("https://")) {
-        logoEl.innerHTML = `<img src="${state.logo}" class="w-full h-full object-cover" onerror="this.onerror=null; this.parentNode.innerText='🌱'">`;
+      const logoEl = document.getElementById("appLogo");
+      if (state.groupLogo.startsWith("http")) {
+        logoEl.innerHTML = `<img src="${state.groupLogo}" class="w-full h-full object-cover">`;
       } else {
-        logoEl.innerHTML = `<span id="headerLogoText">${state.logo || '🌱'}</span>`;
-      }
-    }
-
-    function showCustomModal(options) {
-      const overlay = document.getElementById("customModalOverlay");
-      const title = document.getElementById("modalTitle");
-      const subtitle = document.getElementById("modalSubtitle");
-      const message = document.getElementById("modalMessage");
-      const icon = document.getElementById("modalIcon");
-      const iconBg = document.getElementById("modalIconBg");
-      const inputContainer = document.getElementById("modalInputContainer");
-      const input = document.getElementById("modalInput");
-      const cancelBtn = document.getElementById("modalCancelBtn");
-      const confirmBtn = document.getElementById("modalConfirmBtn");
-
-      title.innerText = options.title || "Informasi";
-      subtitle.innerText = options.subtitle || "Pemberitahuan Sistem";
-      message.innerText = options.message || "";
-      
-      if (options.icon) icon.className = options.icon;
-      if (options.iconBg) iconBg.className = `w-10 h-10 rounded-xl flex items-center justify-center text-lg shrink-0 ${options.iconBg}`;
-
-      if (options.showInput) {
-        inputContainer.classList.remove("hidden");
-        input.value = "";
-        input.type = options.inputType || "text";
-        input.placeholder = options.inputPlaceholder || "";
-      } else {
-        inputContainer.classList.add("hidden");
+        logoEl.innerText = state.groupLogo || "🌱";
       }
 
-      if (options.hideCancel) {
-        cancelBtn.classList.add("hidden");
-      } else {
-        cancelBtn.classList.remove("hidden");
-      }
-
-      confirmBtn.innerText = options.confirmText || "OK";
-      confirmBtn.className = `px-4 py-2 text-white text-xs font-bold rounded-xl shadow transition ${options.confirmBtnClass || 'bg-emerald-600 hover:bg-emerald-700'}`;
-
-      confirmBtn.onclick = function() {
-        const val = input.value;
-        closeCustomModal();
-        if (options.onConfirm) options.onConfirm(val);
-      };
-
-      overlay.classList.remove("hidden");
+      document.getElementById("cfgGroupName").value = state.groupName;
+      document.getElementById("cfgGroupLogo").value = state.groupLogo;
+      document.getElementById("cfgMurabbiName").value = state.murabbiName;
     }
 
-    function closeCustomModal() {
-      document.getElementById("customModalOverlay").classList.add("hidden");
+    function saveWebIdentity() {
+      state.groupName = document.getElementById("cfgGroupName").value.trim() || "Lingkar Bertumbuh";
+      state.groupLogo = document.getElementById("cfgGroupLogo").value.trim() || "🌱";
+      state.murabbiName = document.getElementById("cfgMurabbiName").value.trim() || "Rio Friyadi";
+
+      localStorage.setItem("lb_group_name", state.groupName);
+      localStorage.setItem("lb_group_logo", state.groupLogo);
+      localStorage.setItem("lb_murabbi_name", state.murabbiName);
+
+      applyWebIdentity();
+      showToast("Identitas Web Berhasil Disimpan!");
     }
 
-    function showNotification(msg, title = "Sukses") {
-      showCustomModal({
-        title: title,
-        subtitle: "Pemberitahuan",
-        message: msg,
-        hideCancel: true,
-        icon: "fa-solid fa-circle-check",
-        iconBg: "bg-emerald-100 text-emerald-600"
-      });
-    }
-
+    // CALCULATE POINTS (LEADERBOARD)
     function calculatePoints(rec) {
       if (!rec) return 0;
       let score = 0;
-      score += (parseFloat(rec.tilawahJuz) || 0) * 20; // 0.5 juz = 10pt
-      score += (parseInt(rec.sholatMasjid) || 0) * 2;   // 35 masjid = 70pt
-      score += (parseInt(rec.dhuhaHari) || 0) * 10;     // 3 hari = 30pt
-      score += (parseInt(rec.tahajudHari) || 0) * 15;   // 2 hari = 30pt
-      
+      score += (parseFloat(rec.tilawahJuz) || 0) * 20;
+      score += (parseInt(rec.sholatMasjid) || 0) * 2;
+      score += (parseInt(rec.dhuhaHari) || 0) * 10;
+      score += (parseInt(rec.tahajudHari) || 0) * 15;
+
       if (rec.statusTasqif === 'Hadir') score += 20;
       else if (rec.statusTasqif === 'Izin') score += 5;
 
@@ -711,8 +541,9 @@
       return Math.round(score);
     }
 
+    // RENDER LEADERBOARD
     function renderLeaderboard() {
-      const leaderboardData = state.members.map(m => {
+      const data = state.members.map(m => {
         const rec = state.records[m] || {};
         return {
           name: m,
@@ -722,65 +553,63 @@
         };
       }).sort((a, b) => b.score - a.score);
 
-      const podiumEl = document.getElementById("podiumSection");
-      const top1 = leaderboardData[0] || { name: '-', score: 0 };
-      const top2 = leaderboardData[1] || { name: '-', score: 0 };
-      const top3 = leaderboardData[2] || { name: '-', score: 0 };
+      const top1 = data[0] || { name: '-', score: 0 };
+      const top2 = data[1] || { name: '-', score: 0 };
+      const top3 = data[2] || { name: '-', score: 0 };
 
-      podiumEl.innerHTML = `
-        <!-- Rank 2 (Silver) -->
+      // Render Podium
+      document.getElementById("podiumSection").innerHTML = `
         <div class="text-center">
-          <div class="rank-2 p-2.5 sm:p-3 rounded-2xl space-y-1">
-            <span class="text-lg sm:text-xl">🥈</span>
-            <p class="font-bold text-[11px] sm:text-xs text-slate-800 truncate">${top2.name}</p>
-            <p class="text-xs sm:text-sm font-black text-slate-700">${top2.score} <span class="text-[9px] text-slate-500 font-normal">pt</span></p>
+          <div class="silver-gradient p-3 rounded-2xl shadow border border-slate-300">
+            <span class="text-lg">🥈</span>
+            <p class="font-extrabold text-[11px] text-slate-800 truncate mt-0.5">${top2.name}</p>
+            <p class="text-xs font-black text-slate-700">${top2.score} pts</p>
           </div>
-          <div class="h-10 sm:h-12 bg-slate-200 rounded-b-xl mt-1 flex items-center justify-center font-bold text-xs text-slate-500">2</div>
+          <div class="h-10 bg-slate-200/80 rounded-b-2xl mt-1 flex items-center justify-center font-bold text-xs text-slate-500">2</div>
         </div>
 
-        <!-- Rank 1 (Gold) -->
         <div class="text-center -mt-3">
-          <div class="rank-1 p-3 sm:p-4 rounded-2xl space-y-1">
-            <span class="text-2xl sm:text-3xl">🥇</span>
-            <p class="font-extrabold text-xs sm:text-sm text-amber-950 truncate">${top1.name}</p>
-            <p class="text-sm sm:text-base font-black text-amber-900">${top1.score} <span class="text-[10px] text-amber-800 font-normal">pt</span></p>
+          <div class="gold-gradient p-3.5 rounded-2xl shadow-md border border-amber-300">
+            <span class="text-2xl">🥇</span>
+            <p class="font-extrabold text-xs text-amber-950 truncate mt-0.5">${top1.name}</p>
+            <p class="text-sm font-black text-amber-900">${top1.score} pts</p>
           </div>
-          <div class="h-14 sm:h-16 bg-amber-300 rounded-b-xl mt-1 flex items-center justify-center font-bold text-sm text-amber-900">1</div>
+          <div class="h-14 bg-amber-300/80 rounded-b-2xl mt-1 flex items-center justify-center font-bold text-xs text-amber-800">1</div>
         </div>
 
-        <!-- Rank 3 (Bronze) -->
         <div class="text-center">
-          <div class="rank-3 p-2.5 sm:p-3 rounded-2xl space-y-1">
-            <span class="text-lg sm:text-xl">🥉</span>
-            <p class="font-bold text-[11px] sm:text-xs text-orange-950 truncate">${top3.name}</p>
-            <p class="text-xs sm:text-sm font-black text-orange-800">${top3.score} <span class="text-[9px] text-orange-600 font-normal">pt</span></p>
+          <div class="bronze-gradient p-3 rounded-2xl shadow border border-orange-200">
+            <span class="text-lg">🥉</span>
+            <p class="font-extrabold text-[11px] text-orange-950 truncate mt-0.5">${top3.name}</p>
+            <p class="text-xs font-black text-orange-900">${top3.score} pts</p>
           </div>
-          <div class="h-8 sm:h-10 bg-orange-200 rounded-b-xl mt-1 flex items-center justify-center font-bold text-xs text-orange-700">3</div>
+          <div class="h-7 bg-orange-200/80 rounded-b-2xl mt-1 flex items-center justify-center font-bold text-xs text-orange-700">3</div>
         </div>
       `;
 
-      const listEl = document.getElementById("rankingList");
-      listEl.innerHTML = leaderboardData.map((item, index) => `
-        <div class="bg-slate-50 border border-slate-200/80 p-3 rounded-xl flex justify-between items-center transition hover:bg-slate-100/50">
-          <div class="flex items-center gap-3 overflow-hidden">
-            <span class="w-6 h-6 rounded-lg bg-slate-200/80 flex items-center justify-center font-bold text-xs text-slate-600 shrink-0">${index + 1}</span>
+      // Render Full Ranking List
+      document.getElementById("rankingList").innerHTML = data.map((item, index) => `
+        <div class="bg-slate-50 border border-slate-200 p-3 rounded-2xl flex justify-between items-center hover:bg-slate-100/80 transition">
+          <div class="flex items-center gap-3 truncate">
+            <span class="w-6 h-6 rounded-full ${index < 3 ? 'bg-slate-800 text-white' : 'bg-slate-200 text-slate-600'} flex items-center justify-center font-bold text-[11px] shrink-0">${index + 1}</span>
             <div class="truncate">
-              <p class="font-bold text-xs sm:text-sm text-slate-800 truncate">${item.name}</p>
-              <p class="text-[10px] text-slate-500">Tilawah: ${item.tilawah} Juz | Masjid: ${item.masjid}/35</p>
+              <p class="font-bold text-xs text-slate-800 truncate">${item.name}</p>
+              <p class="text-[10px] text-slate-500">Tilawah: ${item.tilawah} Jz | Masjid: ${item.masjid}/35</p>
             </div>
           </div>
           <div class="text-right shrink-0">
-            <span class="font-black text-emerald-600 text-xs sm:text-sm">${item.score}</span>
-            <span class="text-[10px] text-slate-400 font-semibold"> pts</span>
+            <span class="font-black text-emerald-600 text-sm">${item.score}</span>
+            <span class="text-[10px] text-slate-400 font-bold"> pts</span>
           </div>
         </div>
       `).join('');
     }
 
+    // CLOUD DATABASE SYNC
     async function saveMutabaah(e) {
       e.preventDefault();
-      const btn = document.getElementById("btnSaveMutabaah");
       const user = document.getElementById("userSelect").value;
+      const btn = document.getElementById("btnSaveMutabaah");
 
       const rec = {
         user,
@@ -789,23 +618,19 @@
         dhuhaHari: parseInt(document.getElementById("dhuhaHari").value) || 0,
         tahajudHari: parseInt(document.getElementById("tahajudHari").value) || 0,
         statusTasqif: document.getElementById("statusTasqif").value,
-        catatanTasqif: document.getElementById("catatanTasqif").value,
         statusMabit: document.getElementById("statusMabit").value,
-        catatanMabit: document.getElementById("catatanMabit").value,
         statusTahsin: document.getElementById("statusTahsin").value,
-        materiTahsin: document.getElementById("materiTahsin").value,
         statusHafalan: document.getElementById("statusHafalan").value,
-        detailHafalan: document.getElementById("detailHafalan").value,
         catatanKendala: document.getElementById("catatanKendala").value,
         updatedAt: new Date().toLocaleDateString("id-ID")
       };
 
       rec.score = calculatePoints(rec);
       state.records[user] = rec;
-      saveState();
+      localStorage.setItem("lb_records", JSON.stringify(state.records));
 
       if (state.scriptUrl) {
-        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Mengirim Cloud...`;
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Mengirim Data...`;
         try {
           await fetch(state.scriptUrl, {
             method: "POST",
@@ -813,13 +638,13 @@
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(rec)
           });
-          showNotification(`Mutabaah ${user} berhasil dikirim ke Cloud Google Sheets Murabbi.`);
+          showToast(`Mutabaah ${user} berhasil dikirim ke Cloud!`);
         } catch (err) {
-          showNotification(`Data tersimpan lokal di HP. Koneksi Cloud Google Sheets gagal.`, "Simpan Lokal");
+          showToast("Koneksi gagal, data disimpan di HP saja.", "error");
         }
-        btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Simpan Mutabaah`;
+        btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Simpan Ke Database Cloud`;
       } else {
-        showNotification(`Mutabaah ${user} berhasil tersimpan secara lokal. Pasang link Google Sheets di menu Admin agar terhubung ke HP Murabbi.`, "Tersimpan Lokal");
+        showToast(`Tersimpan lokal. Pasang link Apps Script di Admin agar terhubung Cloud.`);
       }
 
       renderDashboard();
@@ -827,177 +652,163 @@
     }
 
     async function fetchDataFromCloud() {
-      if (!state.scriptUrl) {
-        showNotification("URL Apps Script Google Sheets belum terpasang di menu Admin.", "Sync Gagal");
-        return;
-      }
-      document.getElementById("dbStatusText").innerText = "Mengambil data...";
-      
+      if (!state.scriptUrl) return;
+      updateSyncStatus(true, "Mengambil data...");
+
       try {
         const res = await fetch(state.scriptUrl);
         const data = await res.json();
-        
-        if (Array.isArray(data)) {
-          data.forEach(item => {
-            if (item.user) {
-              state.records[item.user] = {
-                user: item.user,
-                tilawahJuz: parseFloat(item.tilawahJuz) || 0,
-                sholatMasjid: parseInt(item.sholatMasjid) || 0,
-                dhuhaHari: parseInt(item.dhuhaHari) || 0,
-                tahajudHari: parseInt(item.tahajudHari) || 0,
-                statusTasqif: item.statusTasqif,
-                statusMabit: item.statusMabit,
-                statusTahsin: item.statusTahsin,
-                statusHafalan: item.statusHafalan,
-                catatanKendala: item.catatanKendala,
-                updatedAt: item.updatedAt
-              };
-            }
-          });
-          saveState();
-          renderDashboard();
-          renderLeaderboard();
-          document.getElementById("dbStatusText").innerText = "Google Sheets Terhubung";
-        }
+
+        data.forEach(item => {
+          if (item.user) {
+            state.records[item.user] = {
+              tilawahJuz: parseFloat(item.tilawahJuz) || 0,
+              sholatMasjid: parseInt(item.sholatMasjid) || 0,
+              dhuhaHari: parseInt(item.dhuhaHari) || 0,
+              tahajudHari: parseInt(item.tahajudHari) || 0,
+              statusTasqif: item.statusTasqif,
+              statusMabit: item.statusMabit,
+              statusTahsin: item.statusTahsin,
+              statusHafalan: item.statusHafalan,
+              catatanKendala: item.catatanKendala,
+              updatedAt: item.updatedAt
+            };
+          }
+        });
+
+        localStorage.setItem("lb_records", JSON.stringify(state.records));
+        renderDashboard();
+        renderLeaderboard();
+        updateSyncStatus(true, "Database Sync: Terhubung");
       } catch (err) {
-        document.getElementById("dbStatusText").innerText = "Tersimpan Lokal (Offline)";
+        updateSyncStatus(false, "Mode Offline / URL Apps Script Error");
       }
     }
 
+    function updateSyncStatus(isOk, text) {
+      document.getElementById("syncStatusText").innerText = text;
+      const ping = document.getElementById("syncPing");
+      const dot = document.getElementById("syncDot");
+
+      if (isOk) {
+        ping.className = "animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75";
+        dot.className = "relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500";
+      } else {
+        ping.className = "hidden";
+        dot.className = "relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500";
+      }
+    }
+
+    function saveScriptUrl() {
+      const url = document.getElementById("scriptUrlInput").value.trim();
+      state.scriptUrl = url;
+      localStorage.setItem("lb_script_url", url);
+      showToast("URL Web App Google Sheets Disimpan!");
+      fetchDataFromCloud();
+    }
+
+    // RESET LEADERBOARD & DATA
+    function confirmResetData(type) {
+      const title = type === 'weekly' ? "Reset Pekanan?" : "Reset Total Data?";
+      const text = type === 'weekly' 
+        ? "Semua skor poin mutabaah pekan ini akan di-nol-kan kembali untuk memulai pekan baru. (Daftar nama kader tetap ada)" 
+        : "Seluruh riwayat mutabaah akan dihapus secara total.";
+
+      showConfirmModal(title, text, () => {
+        state.records = {};
+        localStorage.setItem("lb_records", JSON.stringify(state.records));
+        renderDashboard();
+        renderLeaderboard();
+        showToast(type === 'weekly' ? "Pekan Baru Dimulai! Poin telah direset." : "Seluruh data telah dihapus.");
+      });
+    }
+
+    // ADMIN LOGIN & MODAL HANDLERS
     function handleAdminToggle() {
       if (!state.isAdmin) {
-        showCustomModal({
-          title: "Akses Admin",
-          subtitle: "Verifikasi Kata Sandi",
-          message: "Masukkan PIN Admin untuk mengelola sistem:",
-          showInput: true,
-          inputType: "password",
-          inputPlaceholder: "Masukkan PIN Admin...",
-          confirmText: "Masuk Admin",
-          onConfirm: function(pinVal) {
-            if (pinVal === state.adminPin) {
-              state.isAdmin = true;
-              document.getElementById("roleBadge").innerText = "🔑 Admin";
-              document.getElementById("btnAdminText").innerText = "Keluar Admin";
-              document.querySelectorAll(".admin-only").forEach(e => e.classList.remove("hidden"));
-              switchTab("tabAdmin");
-              showNotification("Berhasil masuk sebagai Admin!", "Akses Diberikan");
-            } else {
-              showNotification("PIN Admin yang Anda masukkan salah!", "Akses Ditolak");
-            }
-          }
-        });
+        document.getElementById("inputModalPin").value = "";
+        document.getElementById("modalAdminLogin").classList.remove("hidden");
+        document.getElementById("inputModalPin").focus();
       } else {
         state.isAdmin = false;
         document.getElementById("roleBadge").innerText = "👤 Anggota";
         document.getElementById("btnAdminText").innerText = "Admin";
         document.querySelectorAll(".admin-only").forEach(e => e.classList.add("hidden"));
         switchTab("tabLeaderboard");
+        showToast("Keluar dari Mode Admin.");
       }
     }
 
-    function saveGroupIdentity() {
-      const logo = document.getElementById("adminLogoInput").value.trim();
-      const groupName = document.getElementById("adminGroupNameInput").value.trim();
-      const murabbiName = document.getElementById("adminMurabbiInput").value.trim();
+    function closeAdminModal() {
+      document.getElementById("modalAdminLogin").classList.add("hidden");
+    }
 
-      if (groupName) state.groupName = groupName;
-      if (murabbiName) state.murabbiName = murabbiName;
-      state.logo = logo || "🌱";
-
-      saveState();
-      applyGroupIdentity();
-      showNotification("Identitas group dan logo berhasil diperbarui!", "Perubahan Disimpan");
+    function submitAdminLogin() {
+      const input = document.getElementById("inputModalPin").value;
+      if (input === state.adminPin) {
+        state.isAdmin = true;
+        document.getElementById("roleBadge").innerText = "🔑 Mode Admin";
+        document.getElementById("btnAdminText").innerText = "Keluar Admin";
+        document.querySelectorAll(".admin-only").forEach(e => e.classList.remove("hidden"));
+        closeAdminModal();
+        switchTab("tabAdmin");
+        showToast("Login Admin Berhasil!");
+      } else {
+        showToast("PIN Admin Salah!", "error");
+      }
     }
 
     function changeAdminPin() {
-      const oldPin = document.getElementById("adminOldPinInput").value.trim();
-      const newPin = document.getElementById("adminNewPinInput").value.trim();
-
-      if (oldPin !== state.adminPin) {
-        showNotification("PIN Lama Anda salah!", "Gagal");
+      const newPin = document.getElementById("newPinInput").value.trim();
+      if (newPin.length < 4) {
+        showToast("PIN minimal 4 angka!", "error");
         return;
       }
-      if (!newPin || newPin.length < 4) {
-        showNotification("PIN Baru minimal 4 karakter!", "Gagal");
-        return;
-      }
-
       state.adminPin = newPin;
-      saveState();
-      document.getElementById("adminOldPinInput").value = "";
-      document.getElementById("adminNewPinInput").value = "";
-      showNotification("PIN Admin berhasil diubah!", "Sukses");
+      localStorage.setItem("lb_pin", newPin);
+      document.getElementById("newPinInput").value = "";
+      showToast("PIN Admin Berhasil Diubah!");
     }
 
-    function confirmResetPekanan() {
-      showCustomModal({
-        title: "Reset Pekanan?",
-        subtitle: "Aksi Pekanan",
-        message: "Apakah Anda yakin ingin mereset seluruh nilai mutabaah pekan ini menjadi 0 untuk memulai pekan baru? Data anggota tetap ada.",
-        confirmText: "Ya, Reset Pekan Ini",
-        confirmBtnClass: "bg-amber-600 hover:bg-amber-700",
-        onConfirm: function() {
-          state.records = {};
-          saveState();
-          renderDashboard();
-          renderLeaderboard();
-          showNotification("Data mutabaah pekan ini berhasil direset ke nol!", "Reset Pekanan Selesai");
-        }
-      });
+    // CONFIRM MODAL
+    let currentConfirmAction = null;
+    function showConfirmModal(title, text, action) {
+      document.getElementById("modalConfirmTitle").innerText = title;
+      document.getElementById("modalConfirmText").innerText = text;
+      currentConfirmAction = action;
+      document.getElementById("modalConfirm").classList.remove("hidden");
+      
+      document.getElementById("btnConfirmAction").onclick = function() {
+        if (currentConfirmAction) currentConfirmAction();
+        closeConfirmModal();
+      };
     }
 
-    function confirmResetTotal() {
-      showCustomModal({
-        title: "Reset Total Semua Data?",
-        subtitle: "Tindakan Permanen",
-        message: "PERINGATAN: Seluruh rekap mutabaah dan riwayat mentoring akan dihapus secara permanen. Apakah Anda yakin?",
-        confirmText: "Hapus Semua Data",
-        confirmBtnClass: "bg-red-600 hover:bg-red-700",
-        onConfirm: function() {
-          state.records = {};
-          state.mentoringLogs = [];
-          saveState();
-          renderDashboard();
-          renderLeaderboard();
-          renderMentoringLogs();
-          showNotification("Seluruh database lokal berhasil dibersihkan!", "Reset Total Selesai");
-        }
-      });
+    function closeConfirmModal() {
+      document.getElementById("modalConfirm").classList.add("hidden");
     }
 
-    function saveScriptUrl() {
-      const url = document.getElementById("scriptUrlInput").value.trim();
-      state.scriptUrl = url;
-      saveState();
-      showNotification("Link Google Apps Script berhasil disimpan!", "Sukses");
-      fetchDataFromCloud();
-    }
-
+    // TAB SWITCHING
     function switchTab(tabId) {
       document.querySelectorAll(".tab-content").forEach(el => el.classList.add("hidden"));
       document.getElementById(tabId).classList.remove("hidden");
-      document.querySelectorAll("[id^='nav-tab']").forEach(btn => {
+
+      document.querySelectorAll(".nav-tab").forEach(btn => {
         btn.classList.remove("border-amber-400", "text-white");
         btn.classList.add("border-transparent");
       });
+
       const activeNav = document.getElementById("nav-" + tabId);
-      if(activeNav) {
+      if (activeNav) {
         activeNav.classList.add("border-amber-400", "text-white");
         activeNav.classList.remove("border-transparent");
       }
     }
 
+    // DROPDOWNS & USERS
     function renderMemberDropdowns() {
-      const userSelect = document.getElementById("userSelect");
-      const mentoringSelect = document.getElementById("mentoringUserSelect");
-      userSelect.innerHTML = "";
-      mentoringSelect.innerHTML = "";
-      state.members.forEach(m => {
-        userSelect.innerHTML += `<option value="${m}">${m}</option>`;
-        mentoringSelect.innerHTML += `<option value="${m}">${m}</option>`;
-      });
+      const select = document.getElementById("userSelect");
+      select.innerHTML = state.members.map(m => `<option value="${m}">${m}</option>`).join('');
     }
 
     function loadUserSavedData() {
@@ -1008,213 +819,99 @@
       document.getElementById("dhuhaHari").value = rec.dhuhaHari || "";
       document.getElementById("tahajudHari").value = rec.tahajudHari || "";
       document.getElementById("statusTasqif").value = rec.statusTasqif || "Hadir";
-      document.getElementById("catatanTasqif").value = rec.catatanTasqif || "";
       document.getElementById("statusMabit").value = rec.statusMabit || "Hadir";
-      document.getElementById("catatanMabit").value = rec.catatanMabit || "";
       document.getElementById("statusTahsin").value = rec.statusTahsin || "Sudah Setoran";
-      document.getElementById("materiTahsin").value = rec.materiTahsin || "";
       document.getElementById("statusHafalan").value = rec.statusHafalan || "Tercapai";
-      document.getElementById("detailHafalan").value = rec.detailHafalan || "";
       document.getElementById("catatanKendala").value = rec.catatanKendala || "";
-    }
-
-    function renderDashboard() {
-      const tbody = document.getElementById("dashboardTableBody");
-      let totalTilawah = 0, totalMasjid = 0;
-
-      tbody.innerHTML = state.members.map(m => {
-        const rec = state.records[m] || {};
-        totalTilawah += parseFloat(rec.tilawahJuz) || 0;
-        totalMasjid += parseInt(rec.sholatMasjid) || 0;
-
-        return `
-          <tr class="border-b border-slate-100 hover:bg-slate-50">
-            <td class="p-3 font-bold text-slate-800">${m}</td>
-            <td class="p-3 font-bold text-emerald-600">${calculatePoints(rec)} pts</td>
-            <td class="p-3">${rec.tilawahJuz || 0} Juz</td>
-            <td class="p-3">${rec.sholatMasjid || 0} / 35</td>
-            <td class="p-3">${rec.dhuhaHari || 0}x / ${rec.tahajudHari || 0}x</td>
-            <td class="p-3">${rec.statusTasqif || '-'} / ${rec.statusMabit || '-'}</td>
-            <td class="p-3">${rec.updatedAt ? `<span class="text-[10px] font-bold text-emerald-600">✅ Terisi</span>` : `<span class="text-[10px] text-amber-500 font-bold">⏳ Belum</span>`}</td>
-          </tr>
-        `;
-      }).join('');
-
-      document.getElementById("statTotalKader").innerText = state.members.length;
-      document.getElementById("statAvgTilawah").innerText = (totalTilawah / (state.members.length || 1)).toFixed(1) + " Juz";
-      document.getElementById("statAvgMasjid").innerText = Math.round(totalMasjid / (state.members.length || 1)) + " / 35";
-    }
-
-    function generateAndSendWA() {
-      const user = document.getElementById("userSelect").value;
-      const rec = state.records[user];
-      if (!rec) { 
-        showNotification("Harap simpan mutabaah terlebih dahulu sebelum mengirim WA!", "Peringatan"); 
-        return; 
-      }
-
-      const text = `*MUTABAAH DIGITAL - ${state.groupName.toUpperCase()}*\nNama: *${user}*\nTotal Poin Pekan Ini: *${calculatePoints(rec)} pts*\n\n• Tilawah: ${rec.tilawahJuz || 0} Juz\n• Sholat Masjid: ${rec.sholatMasjid || 0}/35 Waktu\n• Dhuha/Tahajud: ${rec.dhuhaHari || 0}x / ${rec.tahajudHari || 0}x\n• Tasqif/Mabit: ${rec.statusTasqif || '-'} / ${rec.statusMabit || '-'}\n• Kendala/Catatan: ${rec.catatanKendala || '-'}\n\nMohon bimbingannya Murabbi ${state.murabbiName} 🙏`;
-      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
-    }
-
-    function copyGroupWARecap() {
-      let text = `*REKAP KLASEMEN MUTABAAH - ${state.groupName.toUpperCase()}*\nMurabbi: ${state.murabbiName}\n-----------------------------------\n`;
-      
-      const leaderboardData = state.members.map(m => {
-        const rec = state.records[m] || {};
-        return { name: m, score: calculatePoints(rec), tilawah: rec.tilawahJuz || 0 };
-      }).sort((a, b) => b.score - a.score);
-
-      leaderboardData.forEach((item, idx) => {
-        text += `${idx + 1}. ${item.name} - *${item.score} pts* (${item.tilawah} Juz)\n`;
-      });
-
-      text += `\nBarakallahu fiikum. Mari tingkatkan amalan kita pekan ini! 🚀`;
-
-      // Copy to clipboard
-      const tempInput = document.createElement("textarea");
-      tempInput.value = text;
-      document.body.appendChild(tempInput);
-      tempInput.select();
-      document.execCommand("copy");
-      document.body.removeChild(tempInput);
-
-      showNotification("Teks rekap WhatsApp berhasil disalin ke clipboard!", "Salin Sukses");
     }
 
     function renderMemberListAdmin() {
       document.getElementById("memberAdminList").innerHTML = state.members.map((m, idx) => `
-        <li class="p-3 flex justify-between items-center text-xs">
+        <li class="p-3 flex justify-between items-center">
           <span class="font-bold text-slate-700">${idx + 1}. ${m}</span>
-          <button onclick="removeMember('${m}')" class="text-red-600 font-bold text-[11px] bg-red-50 hover:bg-red-100 px-2.5 py-1 rounded-lg transition">Hapus</button>
+          <button onclick="removeMember('${m}')" class="text-rose-600 hover:text-rose-800 font-bold text-xs bg-rose-50 px-2.5 py-1 rounded-lg">Hapus</button>
         </li>
       `).join('');
     }
 
     function addNewMember(e) {
       e.preventDefault();
-      const name = document.getElementById("newMemberName").value.trim();
+      const nameInput = document.getElementById("newMemberName");
+      const name = nameInput.value.trim();
       if (name && !state.members.includes(name)) {
         state.members.push(name);
-        saveState();
+        localStorage.setItem("lb_members", JSON.stringify(state.members));
         renderMemberDropdowns();
         renderMemberListAdmin();
         renderDashboard();
         renderLeaderboard();
-        document.getElementById("newMemberName").value = "";
-        showNotification(`Anggota ${name} telah ditambahkan!`, "Anggota Baru");
+        nameInput.value = "";
+        showToast(`Anggota ${name} ditambahkan!`);
       }
     }
 
     function removeMember(name) {
-      showCustomModal({
-        title: "Hapus Anggota?",
-        subtitle: "Konfirmasi Hapus",
-        message: `Apakah Anda yakin ingin menghapus ${name} dari daftar anggota?`,
-        confirmText: "Hapus",
-        confirmBtnClass: "bg-red-600 hover:bg-red-700",
-        onConfirm: function() {
-          state.members = state.members.filter(m => m !== name);
-          delete state.records[name];
-          saveState();
-          renderMemberDropdowns();
-          renderMemberListAdmin();
-          renderDashboard();
-          renderLeaderboard();
-          showNotification(`Anggota ${name} telah dihapus.`, "Terhapus");
-        }
+      showConfirmModal("Hapus Anggota?", `Yakin hapus ${name} dari daftar kader?`, () => {
+        state.members = state.members.filter(m => m !== name);
+        delete state.records[name];
+        localStorage.setItem("lb_members", JSON.stringify(state.members));
+        localStorage.setItem("lb_records", JSON.stringify(state.records));
+        renderMemberDropdowns();
+        renderMemberListAdmin();
+        renderDashboard();
+        renderLeaderboard();
+        showToast(`Anggota ${name} dihapus.`);
       });
     }
 
-    // Mentoring & Event Log Features
-    function previewMentoringImage(input) {
-      if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          document.getElementById("photoPreview").src = e.target.result;
-          document.getElementById("photoPreviewContainer").classList.remove("hidden");
-        };
-        reader.readAsDataURL(input.files[0]);
-      }
+    // DASHBOARD & REKAP
+    function renderDashboard() {
+      const tbody = document.getElementById("dashboardTableBody");
+      let totalTilawah = 0, totalMasjid = 0, activeCount = 0;
+
+      tbody.innerHTML = state.members.map(m => {
+        const rec = state.records[m] || {};
+        if (rec.updatedAt) activeCount++;
+        totalTilawah += rec.tilawahJuz || 0;
+        totalMasjid += rec.sholatMasjid || 0;
+
+        return `
+          <tr class="border-b border-slate-100 hover:bg-slate-50">
+            <td class="p-3 font-bold text-slate-800">${m}</td>
+            <td class="p-3 font-extrabold text-emerald-600">${calculatePoints(rec)} pts</td>
+            <td class="p-3">${rec.tilawahJuz || 0} Juz</td>
+            <td class="p-3">${rec.sholatMasjid || 0} / 35</td>
+            <td class="p-3">${rec.dhuhaHari || 0}x / ${rec.tahajudHari || 0}x</td>
+            <td class="p-3">${rec.statusTasqif || '-'} / ${rec.statusMabit || '-'}</td>
+            <td class="p-3">${rec.updatedAt ? `<span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">✅ Tersimpan</span>` : `<span class="text-[10px] text-amber-500 font-bold bg-amber-50 px-2 py-0.5 rounded-full">⏳ Belum</span>`}</td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById("statTotalKader").innerText = state.members.length;
+      document.getElementById("statAvgTilawah").innerText = (totalTilawah / (state.members.length || 1)).toFixed(1) + " Jz";
+      document.getElementById("statAvgMasjid").innerText = Math.round(totalMasjid / (state.members.length || 1)) + " / 35";
+      document.getElementById("statActiveKader").innerText = activeCount;
     }
 
-    function submitMentoringAbsen(e) {
-      e.preventDefault();
-      const user = document.getElementById("mentoringUserSelect").value;
-      const status = document.getElementById("mentoringStatus").value;
-      const topic = document.getElementById("mentoringTopic").value;
-      const photoSrc = document.getElementById("photoPreview").src;
+    // WHATSAPP REKAP EXPORT
+    function sendWAData() {
+      const user = document.getElementById("userSelect").value;
+      const rec = state.records[user];
+      if (!rec) { showToast("Simpan mutabaah terlebih dahulu!", "error"); return; }
 
-      state.mentoringLogs.unshift({
-        user,
-        status,
-        topic: topic || "Mentoring Rutin Pekanan",
-        photo: photoSrc && !photoSrc.endsWith("index.html") ? photoSrc : null,
-        date: new Date().toLocaleDateString("id-ID")
+      const text = `*MUTABAAH DIGITAL - ${state.groupName.toUpperCase()}*\nNama Kader: *${user}*\nTotal Poin Pekanan: *${calculatePoints(rec)} pts*\n\n• Tilawah: ${rec.tilawahJuz} Juz\n• Sholat Masjid: ${rec.sholatMasjid}/35 Waktu\n• Dhuha / Tahajud: ${rec.dhuhaHari}x / ${rec.tahajudHari}x\n• Tasqif / Mabit: ${rec.statusTasqif} / ${rec.statusMabit}\n• Tahsin / Hafalan: ${rec.statusTahsin} / ${rec.statusHafalan}\n\nLaporan ini dikirim via Web Mutabaah Digital.`;
+      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    function copyWACollectiveRecap() {
+      let text = `*REKAP MUTABAAH PEKANAN - ${state.groupName.toUpperCase()}*\nMurabbi: ${state.murabbiName}\n----------------------------------\n`;
+      state.members.forEach((m, idx) => {
+        const rec = state.records[m] || {};
+        text += `${idx + 1}. *${m}* (${calculatePoints(rec)} pt) -> Tilawah: ${rec.tilawahJuz || 0}Jz | Masjid: ${rec.sholatMasjid || 0}/35\n`;
       });
-
-      saveState();
-      renderMentoringLogs();
-      document.getElementById("mentoringForm").reset();
-      document.getElementById("photoPreviewContainer").classList.add("hidden");
-      showNotification(`Absensi mentoring ${user} berhasil disimpan!`, "Absen Disimpan");
-    }
-
-    function renderMentoringLogs() {
-      const list = document.getElementById("mentoringLogList");
-      if (state.mentoringLogs.length === 0) {
-        list.innerHTML = `<p class="text-xs text-slate-400 italic col-span-2">Belum ada dokumentasi mentoring.</p>`;
-        return;
-      }
-      list.innerHTML = state.mentoringLogs.map(log => `
-        <div class="bg-slate-50 border border-slate-200 p-3 rounded-xl flex items-center gap-3">
-          ${log.photo ? `<img src="${log.photo}" class="w-12 h-12 rounded-lg object-cover border">` : `<div class="w-12 h-12 rounded-lg bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center text-xs shrink-0">📷</div>`}
-          <div class="overflow-hidden">
-            <p class="font-bold text-xs text-slate-800">${log.user} (${log.status})</p>
-            <p class="text-[11px] text-slate-600 truncate">${log.topic}</p>
-            <p class="text-[10px] text-slate-400">${log.date}</p>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function renderEvents() {
-      const list = document.getElementById("eventList");
-      list.innerHTML = state.events.map(ev => `
-        <div class="bg-slate-50 border border-slate-200 p-3.5 rounded-xl space-y-1">
-          <div class="flex justify-between items-center">
-            <h4 class="font-bold text-xs text-slate-800">${ev.title}</h4>
-            <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">${ev.date}</span>
-          </div>
-          <p class="text-xs text-slate-600">${ev.desc}</p>
-        </div>
-      `).join('');
-    }
-
-    function openCreateEventModal() {
-      showCustomModal({
-        title: "Tambah Misi Pekanan",
-        subtitle: "Misi Baru Murabbi",
-        message: "Masukkan judul misi/event baru:",
-        showInput: true,
-        inputPlaceholder: "Contoh: Hafalan Surah Al-Mulk 1-10...",
-        confirmText: "Tambah Misi",
-        onConfirm: function(val) {
-          if (val) {
-            state.events.unshift({
-              id: Date.now(),
-              title: val,
-              desc: "Misi khusus dari Murabbi",
-              date: "Pekan Ini"
-            });
-            saveState();
-            renderEvents();
-            showNotification("Misi baru berhasil dibuat!", "Misi Dibuat");
-          }
-        }
-      });
+      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
     }
   </script>
 </body>
 </html>
-```
