@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Mutabaah & Leaderboard Digital Pro</title>
+  <title>Mutabaah & Mentoring Digital Pro</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -24,7 +24,7 @@
     body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    .glass-card { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    .glass-card { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
     .glass-input { background: rgba(2, 6, 23, 0.7); border: 1px solid rgba(255, 255, 255, 0.12); }
     .glass-input:focus { border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
     .gold-gradient { background: linear-gradient(135deg, #fef08a 0%, #facc15 50%, #eab308 100%); }
@@ -39,9 +39,8 @@
   <!-- BACKGROUND GLOW EFFECTS -->
   <div class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-b from-brand-900/30 via-emerald-950/10 to-transparent pointer-events-none -z-10"></div>
   <div class="fixed top-20 left-[-10%] w-96 h-96 bg-brand-500/10 rounded-full blur-[120px] pointer-events-none -z-10"></div>
-  <div class="fixed top-40 right-[-10%] w-[30rem] h-[30rem] bg-amber-500/10 rounded-full blur-[140px] pointer-events-none -z-10"></div>
 
-  <!-- TOAST NOTIFICATION CONTAINER -->
+  <!-- TOAST NOTIFICATION -->
   <div id="toastContainer" class="fixed top-5 right-4 left-4 md:left-auto z-50 flex flex-col gap-2.5 pointer-events-none"></div>
 
   <!-- HEADER NAVBAR -->
@@ -79,7 +78,7 @@
           <i class="fa-solid fa-pen-to-square text-brand-400"></i> Input Mutabaah
         </button>
         <button onclick="switchTab('tabDashboard')" id="nav-tabDashboard" class="nav-tab px-4 py-3 border-b-2 border-transparent hover:text-white flex items-center gap-2 whitespace-nowrap transition-all">
-          <i class="fa-solid fa-chart-pie text-cyan-400"></i> Rekap Murabbi
+          <i class="fa-solid fa-clipboard-user text-cyan-400"></i> Rekap Mentoring
         </button>
         <button onclick="switchTab('tabAdmin')" id="nav-tabAdmin" class="nav-tab px-4 py-3 border-b-2 border-transparent hover:text-white flex items-center gap-2 whitespace-nowrap transition-all hidden admin-only">
           <i class="fa-solid fa-sliders text-amber-400"></i> Kelola Sistem
@@ -100,43 +99,34 @@
         <span id="syncStatusText" class="truncate text-slate-200">Database Sync: Siap</span>
       </div>
       <button onclick="fetchDataFromCloud()" class="bg-slate-800/80 hover:bg-slate-700 active:scale-95 text-slate-100 font-bold px-3 py-1.5 rounded-xl border border-slate-700 transition flex items-center gap-1.5 shrink-0 text-[11px]">
-        <i class="fa-solid fa-rotate text-brand-400" id="syncIcon"></i> Refresh
+        <i class="fa-solid fa-rotate text-brand-400" id="syncIcon"></i> Refresh Cloud
       </button>
     </div>
 
     <!-- ================= TAB 1: LEADERBOARD ================= -->
     <section id="tabLeaderboard" class="tab-content space-y-6">
       <div class="glass-card p-5 md:p-7 rounded-3xl shadow-2xl relative overflow-hidden">
-        
         <div class="text-center max-w-sm mx-auto mb-8">
           <span class="bg-amber-500/10 text-amber-400 text-[11px] font-extrabold px-3.5 py-1 rounded-full border border-amber-500/20 inline-block mb-2">
             ✨ Fastabiqul Khairat
           </span>
           <h2 class="text-2xl md:text-3xl font-black text-white tracking-tight">Klasemen Pekanan</h2>
-          <p class="text-xs text-slate-400 mt-1">Peringkat Amalan & Bonus Misi Lingkar Bertumbuh</p>
+          <p class="text-xs text-slate-400 mt-1">Peringkat Amalan & Bonus Misi Pekan Ini</p>
         </div>
 
-        <!-- PODIUM TOP 3 -->
-        <div id="podiumSection" class="grid grid-cols-3 gap-2 md:gap-4 mb-8 items-end min-h-[200px]">
-          <!-- Loaded dynamically via JS -->
-        </div>
-
-        <!-- KLASEMEN LENGKAP -->
-        <div class="space-y-3" id="rankingList">
-          <!-- Loaded dynamically via JS -->
-        </div>
+        <div id="podiumSection" class="grid grid-cols-3 gap-2 md:gap-4 mb-8 items-end min-h-[200px]"></div>
+        <div class="space-y-3" id="rankingList"></div>
       </div>
     </section>
 
-    <!-- ================= TAB 2: FORM MUTABAAH ================= -->
+    <!-- ================= TAB 2: FORM MUTABAAH & ABSEN ================= -->
     <section id="tabForm" class="tab-content hidden space-y-5">
       
-      <!-- PILIH NAMA & LIVE SCORE -->
+      <!-- PILIH ANGGOTA -->
       <div class="glass-card p-5 rounded-3xl shadow-xl flex flex-col md:flex-row justify-between items-center gap-4">
         <div class="w-full md:w-2/3 space-y-1">
           <label class="block text-[11px] font-extrabold uppercase tracking-wider text-brand-400">Pilih Nama Anggota:</label>
           <select id="userSelect" onchange="onUserSelectChange()" class="w-full p-3.5 glass-input rounded-2xl font-bold text-slate-100 text-sm outline-none cursor-pointer">
-            <!-- Loaded via JS -->
           </select>
         </div>
         <div class="w-full md:w-1/3 bg-gradient-to-br from-slate-900 to-slate-950 p-4 rounded-2xl text-center border border-brand-500/30 shadow-lg glow-emerald">
@@ -147,16 +137,50 @@
 
       <form id="mutabaahForm" onsubmit="saveMutabaah(event)" class="space-y-5">
         
+        <!-- ABSEN MENTORING & DOKUMENTASI (FITUR BARU) -->
+        <div class="glass-card p-5 md:p-6 rounded-3xl shadow-xl space-y-4 border-l-4 border-l-cyan-500">
+          <div class="border-b border-slate-800 pb-3 flex justify-between items-center">
+            <h3 class="font-black text-slate-100 text-sm flex items-center gap-2">
+              <i class="fa-solid fa-users text-cyan-400"></i> Absensi & Dokumentasi Mentoring
+            </h3>
+            <span class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">Evaluasi Pekanan</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Status Kehadiran -->
+            <div class="p-4 glass-input rounded-2xl space-y-2">
+              <label class="font-bold text-xs text-slate-200 block">Kehadiran Mentoring Mingguan:</label>
+              <select id="statusMentoring" class="w-full p-3 bg-dark-950 border border-slate-700 rounded-xl text-xs font-bold text-slate-100 outline-none">
+                <option value="Hadir">✅ Hadir Mentoring</option>
+                <option value="Izin">🟡 Izin dengan Alasan Syar'i</option>
+                <option value="Alfa">❌ Tanpa Keterangan (Alfa)</option>
+              </select>
+            </div>
+
+            <!-- Upload Dokumentasi Foto -->
+            <div class="p-4 glass-input rounded-2xl space-y-2">
+              <label class="font-bold text-xs text-slate-200 block">Dokumentasi Foto Mentoring:</label>
+              <input type="file" id="fotoInput" accept="image/*" onchange="previewFoto(event)" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-brand-500 file:text-dark-950 cursor-pointer">
+              <input type="hidden" id="fotoBase64">
+              
+              <div id="fotoPreviewContainer" class="hidden mt-2 relative w-full h-32 rounded-xl overflow-hidden border border-slate-700 bg-slate-900">
+                <img id="fotoPreview" class="w-full h-full object-cover" src="" alt="Preview Dokumentasi">
+                <button type="button" onclick="removeFoto()" class="absolute top-2 right-2 bg-rose-600 text-white p-1.5 rounded-lg text-xs hover:bg-rose-500 transition">
+                  <i class="fa-solid fa-xmark"></i> Hapus Foto
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- AMALAN YAUMI -->
         <div class="glass-card p-5 md:p-6 rounded-3xl shadow-xl space-y-4">
           <div class="flex items-center justify-between border-b border-slate-800 pb-3">
             <h3 class="font-black text-slate-100 text-sm flex items-center gap-2">
               <i class="fa-solid fa-kaaba text-brand-400"></i> Amalan Yaumi Pekanan
             </h3>
-            <span class="text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-brand-500/10 text-brand-400 border border-brand-500/20">Target Evaluasi</span>
           </div>
 
-          <!-- Tilawah -->
           <div class="p-4 glass-input rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div>
               <p class="font-bold text-sm text-slate-100">📖 Tilawah Al-Qur'an <span class="text-xs font-semibold text-brand-400">(+20 pt/juz)</span></p>
@@ -168,7 +192,6 @@
             </div>
           </div>
 
-          <!-- Sholat Jamaah -->
           <div class="p-4 glass-input rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div>
               <p class="font-bold text-sm text-slate-100">🕌 Shalat Jamaah Masjid <span class="text-xs font-semibold text-brand-400">(+2 pt/waktu)</span></p>
@@ -180,11 +203,9 @@
             </div>
           </div>
 
-          <!-- Dhuha -->
           <div class="p-4 glass-input rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div>
               <p class="font-bold text-sm text-slate-100">☀️ Shalat Dhuha <span class="text-xs font-semibold text-brand-400">(+10 pt/hari)</span></p>
-              <p class="text-[11px] text-slate-400">Target Min: 3 Hari / pekan</p>
             </div>
             <div class="flex items-center gap-2">
               <input type="number" id="dhuhaHari" placeholder="0" min="0" max="7" oninput="updateLiveScore()" class="w-24 p-2.5 bg-dark-950 border border-slate-700 rounded-xl font-bold text-center text-sm text-white outline-none focus:border-brand-500">
@@ -192,11 +213,9 @@
             </div>
           </div>
 
-          <!-- Tahajud -->
           <div class="p-4 glass-input rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div>
               <p class="font-bold text-sm text-slate-100">🌙 Shalat Tahajud <span class="text-xs font-semibold text-brand-400">(+15 pt/hari)</span></p>
-              <p class="text-[11px] text-slate-400">Target Min: 2 Hari / pekan</p>
             </div>
             <div class="flex items-center gap-2">
               <input type="number" id="tahajudHari" placeholder="0" min="0" max="7" oninput="updateLiveScore()" class="w-24 p-2.5 bg-dark-950 border border-slate-700 rounded-xl font-bold text-center text-sm text-white outline-none focus:border-brand-500">
@@ -205,80 +224,20 @@
           </div>
         </div>
 
-        <!-- MISI & EVENT -->
-        <div class="glass-card p-5 md:p-6 rounded-3xl shadow-xl space-y-4 border-l-4 border-l-amber-500">
-          <div class="border-b border-slate-800 pb-3 flex justify-between items-center">
-            <h3 class="font-black text-slate-100 text-sm flex items-center gap-2">
-              <i class="fa-solid fa-bullseye text-amber-400"></i> Misi Tantangan & Event
-            </h3>
-            <span class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30">Bonus Point 🎯</span>
-          </div>
-
-          <!-- MISI PEKANAN -->
-          <div class="p-4 bg-amber-500/10 rounded-2xl border border-amber-500/20 space-y-2">
-            <div class="flex items-center justify-between">
-              <span class="font-bold text-xs text-amber-300">🎯 Misi Pekan Ini:</span>
-              <span class="text-[10px] text-emerald-400 font-black bg-emerald-500/20 px-2 py-0.5 rounded-full border border-emerald-500/30">+15 Poin</span>
-            </div>
-            <p class="text-xs font-semibold text-slate-200 bg-dark-950/80 p-3 rounded-xl border border-slate-800">
-              Puasa Sunnah / Sedekah Subuh / Baca Buku Islam 15 Menit
-            </p>
-            <div class="flex items-center gap-2.5 pt-1">
-              <input type="checkbox" id="chkMisiDone" onchange="updateLiveScore()" class="w-4 h-4 accent-brand-500 rounded cursor-pointer">
-              <label for="chkMisiDone" class="text-xs font-bold text-slate-200 cursor-pointer">Saya telah menyelesaikan misi ini</label>
-            </div>
-          </div>
-
-          <!-- EVENT KHUSUS -->
-          <div class="p-4 bg-brand-500/10 rounded-2xl border border-brand-500/20 space-y-2">
-            <div class="flex items-center justify-between">
-              <span class="font-bold text-xs text-brand-300">🎪 Event Khusus Kelompok:</span>
-              <span class="text-[10px] text-brand-300 font-black bg-brand-500/20 px-2 py-0.5 rounded-full border border-brand-500/30">+25 Poin</span>
-            </div>
-            <p class="text-xs font-semibold text-slate-200 bg-dark-950/80 p-3 rounded-xl border border-slate-800">
-              Rihlah Kelompok / Open Buka Bersama / Kajian Akbar
-            </p>
-            <div class="flex items-center gap-2.5 pt-1">
-              <input type="checkbox" id="chkEventDone" onchange="updateLiveScore()" class="w-4 h-4 accent-brand-500 rounded cursor-pointer">
-              <label for="chkEventDone" class="text-xs font-bold text-slate-200 cursor-pointer">Hadir / Berpartisipasi Aktif dalam Event</label>
-            </div>
-          </div>
-        </div>
-
-        <!-- SARANA TARBIYAH -->
+        <!-- MISI & TARGET TARBIYAH -->
         <div class="glass-card p-5 md:p-6 rounded-3xl shadow-xl space-y-4">
           <div class="border-b border-slate-800 pb-3">
             <h3 class="font-black text-slate-100 text-sm flex items-center gap-2">
-              <i class="fa-solid fa-graduation-cap text-brand-400"></i> Kehadiran & Target Hafalan
+              <i class="fa-solid fa-graduation-cap text-brand-400"></i> Target & Catatan Evaluasi
             </h3>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
             <div class="p-3.5 glass-input rounded-2xl space-y-1.5">
-              <label class="font-bold text-xs text-slate-300 block">Tasqif Pekanan</label>
-              <select id="statusTasqif" onchange="updateLiveScore()" class="w-full p-2.5 bg-dark-950 border border-slate-700 rounded-xl text-xs font-bold text-slate-100 outline-none">
-                <option value="Hadir">✅ Hadir (+20 pt)</option>
-                <option value="Izin">🟡 Izin (+5 pt)</option>
-                <option value="Alfa">❌ Tidak Hadir (0 pt)</option>
-                <option value="Belum Ada">⏳ Belum Ada Agenda</option>
-              </select>
-            </div>
-
-            <div class="p-3.5 glass-input rounded-2xl space-y-1.5">
-              <label class="font-bold text-xs text-slate-300 block">Mabit / Agenda Ruhiyah</label>
-              <select id="statusMabit" onchange="updateLiveScore()" class="w-full p-2.5 bg-dark-950 border border-slate-700 rounded-xl text-xs font-bold text-slate-100 outline-none">
-                <option value="Hadir">✅ Hadir (+20 pt)</option>
-                <option value="Izin">🟡 Izin (+5 pt)</option>
-                <option value="Alfa">❌ Tidak Hadir (0 pt)</option>
-                <option value="Belum Ada">⏳ Belum Ada Agenda</option>
-              </select>
-            </div>
-
-            <div class="p-3.5 glass-input rounded-2xl space-y-1.5">
               <label class="font-bold text-xs text-slate-300 block">Tahsin Al-Qur'an</label>
               <select id="statusTahsin" onchange="updateLiveScore()" class="w-full p-2.5 bg-dark-950 border border-slate-700 rounded-xl text-xs font-bold text-slate-100 outline-none">
                 <option value="Sudah Setoran">✅ Sudah Setoran (+15 pt)</option>
-                <option value="Perbaikan">🟡 Perbaikan / Mengulang (+10 pt)</option>
+                <option value="Perbaikan">🟡 Perbaikan (+10 pt)</option>
                 <option value="Belum Setoran">❌ Belum Setoran (0 pt)</option>
               </select>
             </div>
@@ -293,682 +252,61 @@
             </div>
           </div>
 
+          <input type="checkbox" id="chkMisiDone" class="hidden">
+          <input type="checkbox" id="chkEventDone" class="hidden">
+          <select id="statusTasqif" class="hidden"><option value="Hadir">Hadir</option></select>
+          <select id="statusMabit" class="hidden"><option value="Hadir">Hadir</option></select>
+
           <div>
-            <label class="font-bold text-xs text-slate-300 block mb-1">Catatan / Kendala Pekan Ini:</label>
-            <textarea id="catatanKendala" rows="2" placeholder="Tuliskan kendala atau ikhtiar perbaikan pekan ini..." class="w-full p-3 text-xs glass-input rounded-2xl text-slate-100 outline-none focus:border-brand-500"></textarea>
+            <label class="font-bold text-xs text-slate-300 block mb-1">Catatan Evaluasi / Kendala Pekan Ini:</label>
+            <textarea id="catatanKendala" rows="2" placeholder="Tuliskan komitmen atau kendala untuk dievaluasi saat mentoring..." class="w-full p-3 text-xs glass-input rounded-2xl text-slate-100 outline-none focus:border-brand-500"></textarea>
           </div>
         </div>
 
-        <!-- SAVE BUTTON -->
         <button type="submit" id="btnSaveMutabaah" class="w-full bg-gradient-to-r from-brand-600 via-emerald-500 to-brand-500 hover:opacity-95 active:scale-[0.98] text-white font-extrabold py-4 px-6 rounded-2xl shadow-xl glow-emerald transition flex items-center justify-center gap-2 text-sm">
-          <i class="fa-solid fa-cloud-arrow-up text-lg"></i> Simpan Ke Database Cloud
+          <i class="fa-solid fa-cloud-arrow-up text-lg"></i> Simpan Data Ke Database Cloud
         </button>
 
       </form>
     </section>
 
-    <!-- ================= TAB 3: REKAP MURABBI ================= -->
+    <!-- ================= TAB 3: REKAP EVALUASI MENTORING ================= -->
     <section id="tabDashboard" class="tab-content hidden space-y-5">
-      
-      <!-- ACTION TOOLBAR: SHARE WA -->
       <div class="flex justify-between items-center bg-gradient-to-r from-emerald-950 to-slate-900 p-4 rounded-3xl border border-emerald-500/30 shadow-xl">
         <div>
-          <h3 class="font-extrabold text-sm text-white">Evaluasi & Rekap Kelompok</h3>
-          <p class="text-[11px] text-slate-400">Kirim laporan rangkuman langsung ke WhatsApp</p>
+          <h3 class="font-extrabold text-sm text-white">Evaluasi & Rekap Mentoring</h3>
+          <p class="text-[11px] text-slate-400">Rangkuman amalan & absensi untuk majelis mentoring</p>
         </div>
         <button onclick="shareToWhatsApp()" class="bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 font-black text-xs px-4 py-2.5 rounded-2xl shadow-lg glow-emerald transition flex items-center gap-2 shrink-0">
-          <i class="fa-brands fa-whatsapp text-lg"></i> Kirim ke WA
+          <i class="fa-brands fa-whatsapp text-lg"></i> Kirim Ke WA
         </button>
       </div>
 
-      <!-- STATS OVERVIEW CARDS -->
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-        <div class="glass-card p-4 rounded-2xl border border-white/5">
-          <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Total Poin Kelompok</p>
-          <p id="statTotalScore" class="text-xl md:text-2xl font-black text-brand-400 mt-1">0 pts</p>
+      <!-- STATS MENTORING -->
+      <div class="grid grid-cols-3 gap-3">
+        <div class="glass-card p-4 rounded-2xl border border-white/5 text-center">
+          <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Hadir Mentoring</p>
+          <p id="statHadirMentoring" class="text-xl md:text-2xl font-black text-emerald-400 mt-1">0 Kader</p>
         </div>
-        <div class="glass-card p-4 rounded-2xl border border-white/5">
+        <div class="glass-card p-4 rounded-2xl border border-white/5 text-center">
           <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Rata-rata Tilawah</p>
           <p id="statAvgTilawah" class="text-xl md:text-2xl font-black text-cyan-400 mt-1">0 Juz</p>
         </div>
-        <div class="col-span-2 md:col-span-1 glass-card p-4 rounded-2xl border border-white/5">
-          <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Total Jamaah Masjid</p>
+        <div class="glass-card p-4 rounded-2xl border border-white/5 text-center">
+          <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Total Jamaah</p>
           <p id="statTotalSholat" class="text-xl md:text-2xl font-black text-amber-400 mt-1">0 Waktu</p>
         </div>
       </div>
 
-      <div class="glass-card p-5 md:p-6 rounded-3xl shadow-xl space-y-4">
-        <h3 class="font-black text-slate-100 text-base flex items-center gap-2">
-          <i class="fa-solid fa-chart-pie text-cyan-400"></i> Rekap Perkembangan Kader
-        </h3>
-        <div id="rekapContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Dynamic Rekap Data -->
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= TAB 4: KELOLA SISTEM (ADMIN) ================= -->
-    <section id="tabAdmin" class="tab-content hidden space-y-5">
-      
-      <!-- RESET LEADERBOARD PANEL (FITUR BARU) -->
-      <div class="glass-card p-5 md:p-6 rounded-3xl shadow-xl space-y-3 border-l-4 border-l-rose-500">
-        <div class="flex items-center justify-between">
-          <h3 class="font-black text-slate-100 text-base flex items-center gap-2">
-            <i class="fa-solid fa-arrows-rotate text-rose-400"></i> Reset Leaderboard / Poin
-          </h3>
-          <span class="text-[10px] font-extrabold bg-rose-500/20 text-rose-400 px-2.5 py-1 rounded-full border border-rose-500/30">Khusus Murabbi</span>
-        </div>
-        <p class="text-xs text-slate-400 leading-relaxed">
-          Gunakan tombol ini setiap akhir pekan atau akhir bulan untuk mengosongkan/mereset seluruh poin amalan anggota kembali menjadi 0.
-        </p>
-        <button onclick="resetLeaderboard()" class="w-full bg-rose-600/20 hover:bg-rose-600/30 active:scale-95 text-rose-300 font-extrabold py-3 px-4 rounded-2xl border border-rose-500/40 transition flex items-center justify-center gap-2 text-xs">
-          <i class="fa-solid fa-trash-can"></i> Reset Seluruh Poin Pekanan Ini
-        </button>
-      </div>
-
-      <!-- KELOLA ANGGOTA KELOMPOK -->
-      <div class="glass-card p-5 md:p-6 rounded-3xl shadow-xl space-y-4 border-l-4 border-l-brand-500">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-          <h3 class="font-black text-slate-100 text-base flex items-center gap-2">
-            <i class="fa-solid fa-users-gear text-brand-400"></i> Kelola Anggota Kelompok
-          </h3>
-          <span class="text-xs font-extrabold bg-brand-500/20 text-brand-400 px-3 py-1 rounded-full border border-brand-500/30" id="memberCountBadge">0 Anggota</span>
-        </div>
-
-        <!-- FORM TAMBAH ANGGOTA -->
-        <div class="flex gap-2">
-          <input type="text" id="newKaderInput" placeholder="Ketik nama anggota baru..." class="flex-1 p-3 text-xs glass-input rounded-xl text-slate-100 outline-none font-semibold">
-          <button onclick="addKader()" class="bg-brand-600 hover:bg-brand-500 active:scale-95 text-white font-extrabold px-4 py-3 rounded-xl text-xs transition flex items-center gap-1.5 shrink-0 shadow-lg glow-emerald">
-            <i class="fa-solid fa-user-plus"></i> Tambah
-          </button>
-        </div>
-
-        <!-- SEARCH BAR ANGGOTA -->
-        <div>
-          <input type="text" id="searchMemberInput" oninput="renderAdminMemberList()" placeholder="🔍 Cari nama anggota..." class="w-full p-2.5 text-xs bg-dark-950 border border-slate-800 rounded-xl text-slate-300 outline-none">
-        </div>
-
-        <!-- DAFTAR ANGGOTA SAAT INI -->
-        <div class="space-y-2 mt-3 max-h-80 overflow-y-auto no-scrollbar" id="adminMemberList">
-          <!-- Dynamic Admin Member List Loaded via JS -->
+      <!-- GALERI DOKUMENTASI MENTORING -->
+      <div class="glass-card p-5 rounded-3xl space-y-3">
+        <h4 class="font-extrabold text-xs text-cyan-400 uppercase tracking-wider flex items-center gap-2">
+          <i class="fa-solid fa-camera-retro"></i> Galeri Dokumentasi Mentoring
+        </h4>
+        <div id="galleryContainer" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <!-- Loaded via JS -->
         </div>
       </div>
 
-      <!-- DATABASE LINK INFO -->
-      <div class="glass-card p-5 md:p-6 rounded-3xl shadow-xl space-y-4">
-        <h3 class="font-black text-amber-400 text-base flex items-center gap-2">
-          <i class="fa-solid fa-sliders"></i> Info Database Backend
-        </h3>
-        <div>
-          <label class="font-bold text-xs text-slate-300 block mb-1">Link Apps Script Active</label>
-          <input type="text" readonly class="w-full p-3 text-xs bg-dark-950 border border-slate-800 text-slate-400 rounded-xl outline-none font-mono" value="https://script.google.com/macros/s/AKfycbzJkZFLvkQg-0167sRWk-rKlruw7DPP150zzyicVYX14O4qmV2-tqGV4iEHHwFoqf6i/exec">
-          <p class="text-[11px] text-emerald-400 mt-1.5 font-bold">✅ Database terhubung otomatis!</p>
-        </div>
-        <div class="p-4 bg-slate-900/90 rounded-2xl border border-slate-800 text-xs text-slate-300 space-y-1.5">
-          <p class="font-bold text-amber-400">ℹ️ Akses Admin PIN:</p>
-          <p>- PIN Default: <b class="text-white bg-slate-800 px-2 py-0.5 rounded font-mono">1234</b></p>
-        </div>
-      </div>
-
-    </section>
-
-  </main>
-
-  <!-- JAVASCRIPT LOGIC -->
-  <script>
-    const DEFAULT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzJkZFLvkQg-0167sRWk-rKlruw7DPP150zzyicVYX14O4qmV2-tqGV4iEHHwFoqf6i/exec";
-    const ADMIN_PIN = "1234";
-
-    const DEFAULT_KADER = [
-      "Adri Musyarifudin",
-      "Alif Akbar",
-      "Arizal",
-      "Fadly Rasyid",
-      "Faris Audah",
-      "Hendra Yulianto",
-      "Iqbal Khairi",
-      "Muhammad Jamil Batin",
-      "Nurwalid Raihan"
-    ];
-
-    let KADER_LIST = JSON.parse(localStorage.getItem("kaderList")) || DEFAULT_KADER;
-    let dbData = JSON.parse(localStorage.getItem("mutabaahDataCache")) || [];
-    let isAdmin = false;
-
-    // PAGE INITIALIZATION
-    window.addEventListener("DOMContentLoaded", () => {
-      updateUserDropdown();
-      renderAdminMemberList();
-      // Render awal instan dari cache lokal (mencegah layar kosong/blank)
-      renderLeaderboard();
-      renderRekap();
-      // Ambil data terbaru dari cloud
-      fetchDataFromCloud();
-    });
-
-    function saveKaderList() {
-      localStorage.setItem("kaderList", JSON.stringify(KADER_LIST));
-      updateUserDropdown();
-      renderAdminMemberList();
-      renderLeaderboard();
-      renderRekap();
-    }
-
-    function saveLocalDataCache(data) {
-      localStorage.setItem("mutabaahDataCache", JSON.stringify(data));
-    }
-
-    // TAMBAH ANGGOTA BARU
-    function addKader() {
-      const input = document.getElementById("newKaderInput");
-      const name = input.value.trim();
-      
-      if (!name) {
-        showToast("⚠️ Nama anggota tidak boleh kosong!", "error");
-        return;
-      }
-      
-      if (KADER_LIST.some(k => k.toLowerCase() === name.toLowerCase())) {
-        showToast("⚠️ Nama anggota tersebut sudah ada!", "error");
-        return;
-      }
-
-      KADER_LIST.push(name);
-      KADER_LIST.sort();
-      saveKaderList();
-      input.value = "";
-      showToast(`✅ <b>${name}</b> berhasil ditambahkan!`);
-    }
-
-    // KELUARKAN ANGGOTA
-    function deleteKader(index) {
-      const name = KADER_LIST[index];
-      if (confirm(`Apakah Anda yakin ingin mengeluarkan "${name}" dari kelompok?`)) {
-        KADER_LIST.splice(index, 1);
-        saveKaderList();
-        showToast(`🗑️ <b>${name}</b> telah dikeluarkan dari daftar.`);
-      }
-    }
-
-    // UPDATE DROPDOWN ANGGOTA
-    function updateUserDropdown() {
-      const select = document.getElementById("userSelect");
-      const prevVal = select.value;
-      select.innerHTML = "";
-      
-      KADER_LIST.forEach(name => {
-        const opt = document.createElement("option");
-        opt.value = name;
-        opt.innerText = name;
-        select.appendChild(opt);
-      });
-
-      if (KADER_LIST.includes(prevVal)) {
-        select.value = prevVal;
-      } else if (KADER_LIST.length > 0) {
-        select.value = KADER_LIST[0];
-      }
-      
-      onUserSelectChange();
-    }
-
-    // OTO-LOAD DATA KETIKA PILIH ANGGOTA DI DROPDOWN
-    function onUserSelectChange() {
-      const selectedUser = document.getElementById("userSelect").value;
-      const found = dbData.find(d => d.user && d.user.trim().toLowerCase() === selectedUser.trim().toLowerCase());
-      
-      if (found) {
-        document.getElementById("tilawahJuz").value = found.tilawahJuz || 0;
-        document.getElementById("sholatMasjid").value = found.sholatMasjid || 0;
-        document.getElementById("dhuhaHari").value = found.dhuhaHari || 0;
-        document.getElementById("tahajudHari").value = found.tahajudHari || 0;
-        document.getElementById("chkMisiDone").checked = (found.misiText === "Selesai");
-        document.getElementById("chkEventDone").checked = (found.eventText === "Hadir");
-        if (found.statusTasqif) document.getElementById("statusTasqif").value = found.statusTasqif;
-        if (found.statusMabit) document.getElementById("statusMabit").value = found.statusMabit;
-        if (found.statusTahsin) document.getElementById("statusTahsin").value = found.statusTahsin;
-        if (found.statusHafalan) document.getElementById("statusHafalan").value = found.statusHafalan;
-        document.getElementById("catatanKendala").value = found.catatanKendala || "";
-      } else {
-        document.getElementById("tilawahJuz").value = 0;
-        document.getElementById("sholatMasjid").value = 0;
-        document.getElementById("dhuhaHari").value = 0;
-        document.getElementById("tahajudHari").value = 0;
-        document.getElementById("chkMisiDone").checked = false;
-        document.getElementById("chkEventDone").checked = false;
-        document.getElementById("statusTasqif").value = "Hadir";
-        document.getElementById("statusMabit").value = "Hadir";
-        document.getElementById("statusTahsin").value = "Sudah Setoran";
-        document.getElementById("statusHafalan").value = "Tercapai";
-        document.getElementById("catatanKendala").value = "";
-      }
-      updateLiveScore();
-    }
-
-    function renderAdminMemberList() {
-      const list = document.getElementById("adminMemberList");
-      const badge = document.getElementById("memberCountBadge");
-      const searchVal = (document.getElementById("searchMemberInput")?.value || "").toLowerCase();
-      
-      badge.innerText = `${KADER_LIST.length} Anggota`;
-
-      const filtered = KADER_LIST.map((name, idx) => ({ name, originalIndex: idx }))
-                                 .filter(item => item.name.toLowerCase().includes(searchVal));
-
-      if (filtered.length === 0) {
-        list.innerHTML = `<p class="text-xs text-slate-500 text-center py-4">Tidak ada anggota ditemukan.</p>`;
-        return;
-      }
-
-      let html = "";
-      filtered.forEach((item) => {
-        html += `
-          <div class="p-3.5 glass-input rounded-2xl flex items-center justify-between gap-2 hover:border-slate-700 transition">
-            <div class="flex items-center gap-3 truncate">
-              <span class="w-7 h-7 rounded-xl bg-slate-800 text-slate-400 font-bold text-xs flex items-center justify-center shrink-0 border border-slate-700">${item.originalIndex + 1}</span>
-              <span class="font-bold text-xs text-slate-200 truncate">${item.name}</span>
-            </div>
-            <button onclick="deleteKader(${item.originalIndex})" class="text-rose-400 hover:text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 px-3 py-1.5 rounded-xl font-bold text-[11px] transition flex items-center gap-1.5 shrink-0 border border-rose-500/20">
-              <i class="fa-solid fa-user-minus"></i> Keluarkan
-            </button>
-          </div>
-        `;
-      });
-      list.innerHTML = html;
-    }
-
-    function switchTab(tabId) {
-      document.querySelectorAll(".tab-content").forEach(el => el.classList.add("hidden"));
-      document.querySelectorAll(".nav-tab").forEach(el => {
-        el.classList.remove("border-brand-500", "text-white");
-        el.classList.add("border-transparent");
-      });
-
-      document.getElementById(tabId).classList.remove("hidden");
-      document.getElementById("nav-" + tabId).classList.add("border-brand-500", "text-white");
-    }
-
-    function handleAdminToggle() {
-      if (!isAdmin) {
-        const inputPin = prompt("🔒 Masukkan PIN Khusus Murabbi / Admin:");
-        if (inputPin === null) return;
-        if (inputPin !== ADMIN_PIN) {
-          showToast("❌ PIN Salah! Akses Admin Ditolak.", "error");
-          return;
-        }
-        isAdmin = true;
-        showToast("🔓 Mode Admin Aktif!");
-      } else {
-        isAdmin = false;
-        showToast("👤 Mode Anggota Aktif");
-      }
-
-      document.querySelectorAll(".admin-only").forEach(el => {
-        if(isAdmin) el.classList.remove("hidden");
-        else el.classList.add("hidden");
-      });
-      document.getElementById("btnAdminText").innerText = isAdmin ? "Keluar Admin" : "Admin";
-      document.getElementById("adminLockIcon").className = isAdmin ? "fa-solid fa-unlock text-xs" : "fa-solid fa-lock text-xs";
-      document.getElementById("roleBadge").innerText = isAdmin ? "👑 Admin / Murabbi" : "👤 Anggota";
-    }
-
-    function calculateScoreFromInputs() {
-      let score = 0;
-      score += (parseFloat(document.getElementById("tilawahJuz").value) || 0) * 20;
-      score += (parseInt(document.getElementById("sholatMasjid").value) || 0) * 2;
-      score += (parseInt(document.getElementById("dhuhaHari").value) || 0) * 10;
-      score += (parseInt(document.getElementById("tahajudHari").value) || 0) * 15;
-
-      if(document.getElementById("chkMisiDone").checked) score += 15;
-      if(document.getElementById("chkEventDone").checked) score += 25;
-
-      const tasqif = document.getElementById("statusTasqif").value;
-      if(tasqif === "Hadir") score += 20;
-      else if(tasqif === "Izin") score += 5;
-
-      const mabit = document.getElementById("statusMabit").value;
-      if(mabit === "Hadir") score += 20;
-      else if(mabit === "Izin") score += 5;
-
-      const tahsin = document.getElementById("statusTahsin").value;
-      if(tahsin === "Sudah Setoran") score += 15;
-      else if(tahsin === "Perbaikan") score += 10;
-
-      const hafalan = document.getElementById("statusHafalan").value;
-      if(hafalan === "Tercapai") score += 15;
-      else if(hafalan === "Progress") score += 10;
-
-      return score;
-    }
-
-    function updateLiveScore() {
-      const score = calculateScoreFromInputs();
-      document.getElementById("liveCalculatedScore").innerHTML = `${score} <span class="text-xs text-slate-300 font-bold">pts</span>`;
-    }
-
-    async function fetchDataFromCloud() {
-      const syncText = document.getElementById("syncStatusText");
-      const syncIcon = document.getElementById("syncIcon");
-      
-      syncText.innerText = "Database Sync: Memuat Data...";
-      syncIcon.classList.add("animate-spin");
-      
-      try {
-        const res = await fetch(DEFAULT_SCRIPT_URL);
-        if(!res.ok) throw new Error("HTTP error " + res.status);
-        const data = await res.json();
-        dbData = Array.isArray(data) ? data : [];
-        saveLocalDataCache(dbData);
-        syncText.innerText = "Database Sync: Terhubung";
-      } catch (err) {
-        console.error(err);
-        syncText.innerText = "Database Sync: Mode Offline / Cache";
-      } finally {
-        syncIcon.classList.remove("animate-spin");
-        onUserSelectChange();
-        renderLeaderboard();
-        renderRekap();
-      }
-    }
-
-    function getMergedKaderData() {
-      return KADER_LIST.map(name => {
-        const found = dbData.find(d => d.user && d.user.trim().toLowerCase() === name.trim().toLowerCase());
-        return found || {
-          user: name,
-          score: 0,
-          tilawahJuz: 0,
-          sholatMasjid: 0,
-          dhuhaHari: 0,
-          tahajudHari: 0,
-          catatanKendala: ""
-        };
-      });
-    }
-
-    function renderLeaderboard() {
-      const list = document.getElementById("rankingList");
-      const podium = document.getElementById("podiumSection");
-      
-      let mergedData = getMergedKaderData();
-      let sorted = mergedData.sort((a,b) => (b.score || 0) - (a.score || 0));
-
-      // PODIUM SAFE RENDER
-      let podiumHTML = "";
-      
-      // RANK 2
-      if(sorted[1]) {
-        podiumHTML += `
-          <div class="flex flex-col items-center">
-            <div class="w-12 h-12 rounded-2xl silver-gradient flex items-center justify-center font-black text-slate-900 shadow-lg text-sm mb-1.5 border border-white/40">2</div>
-            <p class="text-[11px] font-bold text-slate-200 text-center truncate max-w-[85px]">${sorted[1].user}</p>
-            <p class="text-[10px] text-brand-400 font-extrabold">${sorted[1].score || 0} pt</p>
-            <div class="w-full bg-slate-900/80 h-20 rounded-t-2xl mt-2 border-t border-slate-700 flex items-center justify-center text-slate-400 font-bold text-sm">🥈</div>
-          </div>
-        `;
-      } else { podiumHTML += `<div></div>`; }
-
-      // RANK 1
-      if(sorted[0]) {
-        podiumHTML += `
-          <div class="flex flex-col items-center">
-            <div class="w-14 h-14 rounded-2xl gold-gradient flex items-center justify-center font-black text-slate-900 shadow-xl text-base mb-1.5 glow-amber border border-white/50">👑 1</div>
-            <p class="text-xs font-black text-amber-300 text-center truncate max-w-[95px]">${sorted[0].user}</p>
-            <p class="text-xs text-brand-400 font-black">${sorted[0].score || 0} pt</p>
-            <div class="w-full bg-amber-500/10 h-28 rounded-t-2xl mt-2 border-t-2 border-amber-400/60 flex items-center justify-center text-2xl shadow-inner">🥇</div>
-          </div>
-        `;
-      } else { podiumHTML += `<div></div>`; }
-
-      // RANK 3
-      if(sorted[2]) {
-        podiumHTML += `
-          <div class="flex flex-col items-center">
-            <div class="w-12 h-12 rounded-2xl bronze-gradient flex items-center justify-center font-black text-slate-900 shadow-lg text-sm mb-1.5 border border-white/40">3</div>
-            <p class="text-[11px] font-bold text-slate-200 text-center truncate max-w-[85px]">${sorted[2].user}</p>
-            <p class="text-[10px] text-brand-400 font-extrabold">${sorted[2].score || 0} pt</p>
-            <div class="w-full bg-slate-900/80 h-16 rounded-t-2xl mt-2 border-t border-slate-700 flex items-center justify-center text-amber-600 font-bold text-sm">🥉</div>
-          </div>
-        `;
-      } else { podiumHTML += `<div></div>`; }
-
-      podium.innerHTML = podiumHTML;
-
-      // KLASEMEN LIST
-      let listHTML = "";
-      sorted.forEach((item, idx) => {
-        listHTML += `
-          <div class="p-3.5 glass-input rounded-2xl flex items-center justify-between gap-3 hover:border-slate-600 transition">
-            <div class="flex items-center gap-3 truncate">
-              <span class="font-extrabold text-xs w-6 text-slate-400 text-center shrink-0">#${idx + 1}</span>
-              <div class="truncate">
-                <p class="font-bold text-xs text-slate-100 truncate">${item.user}</p>
-                <p class="text-[10px] text-slate-400 truncate mt-0.5">📖 ${item.tilawahJuz || 0} Juz &nbsp;|&nbsp; 🕌 ${item.sholatMasjid || 0} Jamaah</p>
-              </div>
-            </div>
-            <span class="font-black text-xs text-brand-400 px-3 py-1.5 rounded-xl bg-brand-500/10 border border-brand-500/20 shrink-0">${item.score || 0} pts</span>
-          </div>
-        `;
-      });
-      list.innerHTML = listHTML;
-    }
-
-    function renderRekap() {
-      const container = document.getElementById("rekapContainer");
-      let mergedData = getMergedKaderData();
-
-      let totalScore = 0;
-      let totalTilawah = 0;
-      let totalSholat = 0;
-
-      mergedData.forEach(d => {
-        totalScore += (d.score || 0);
-        totalTilawah += (parseFloat(d.tilawahJuz) || 0);
-        totalSholat += (parseInt(d.sholatMasjid) || 0);
-      });
-
-      const avgTilawah = mergedData.length > 0 ? (totalTilawah / mergedData.length).toFixed(1) : 0;
-
-      document.getElementById("statTotalScore").innerText = `${totalScore} pts`;
-      document.getElementById("statAvgTilawah").innerText = `${avgTilawah} Juz`;
-      document.getElementById("statTotalSholat").innerText = `${totalSholat} Waktu`;
-
-      let html = "";
-      mergedData.forEach(item => {
-        const tilawahPct = Math.min(100, Math.round(((item.tilawahJuz || 0) / 3.5) * 100));
-        const sholatPct = Math.min(100, Math.round(((item.sholatMasjid || 0) / 35) * 100));
-
-        html += `
-          <div class="p-4 glass-card rounded-2xl space-y-3 border border-white/5">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-2.5">
-              <h4 class="font-bold text-sm text-slate-100">${item.user}</h4>
-              <span class="text-xs font-black text-brand-400 bg-brand-500/10 px-2.5 py-1 rounded-xl border border-brand-500/20">${item.score || 0} Pts</span>
-            </div>
-            
-            <div class="space-y-2 text-xs">
-              <div>
-                <div class="flex justify-between text-[11px] text-slate-300 mb-1">
-                  <span>📖 Tilawah: <b class="text-white">${item.tilawahJuz || 0} Juz</b></span>
-                  <span class="text-brand-400 font-bold">${tilawahPct}%</span>
-                </div>
-                <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
-                  <div class="bg-brand-500 h-1.5 rounded-full" style="width: ${tilawahPct}%"></div>
-                </div>
-              </div>
-
-              <div>
-                <div class="flex justify-between text-[11px] text-slate-300 mb-1">
-                  <span>🕌 Sholat Masjid: <b class="text-white">${item.sholatMasjid || 0} Waktu</b></span>
-                  <span class="text-cyan-400 font-bold">${sholatPct}%</span>
-                </div>
-                <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
-                  <div class="bg-cyan-400 h-1.5 rounded-full" style="width: ${sholatPct}%"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-2 text-[10px] text-slate-400 pt-1">
-              <p>☀️ Dhuha: <b class="text-slate-200">${item.dhuhaHari || 0} Hari</b></p>
-              <p>🌙 Tahajud: <b class="text-slate-200">${item.tahajudHari || 0} Hari</b></p>
-            </div>
-
-            ${item.catatanKendala ? `
-              <p class="text-[10px] italic text-slate-400 bg-dark-950/80 p-2.5 rounded-xl border border-slate-800/80">
-                💬 "${item.catatanKendala}"
-              </p>
-            ` : ''}
-          </div>
-        `;
-      });
-      container.innerHTML = html;
-    }
-
-    // FITUR SIMPAN DATA MUTABAAH
-    async function saveMutabaah(e) {
-      e.preventDefault();
-      const btn = document.getElementById("btnSaveMutabaah");
-      btn.disabled = true;
-      btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin text-lg"></i> Menyimpan Data...`;
-
-      const payload = {
-        user: document.getElementById("userSelect").value,
-        tilawahJuz: parseFloat(document.getElementById("tilawahJuz").value) || 0,
-        sholatMasjid: parseInt(document.getElementById("sholatMasjid").value) || 0,
-        dhuhaHari: parseInt(document.getElementById("dhuhaHari").value) || 0,
-        tahajudHari: parseInt(document.getElementById("tahajudHari").value) || 0,
-        misiText: document.getElementById("chkMisiDone").checked ? "Selesai" : "Belum",
-        eventText: document.getElementById("chkEventDone").checked ? "Hadir" : "Belum",
-        statusTasqif: document.getElementById("statusTasqif").value,
-        statusMabit: document.getElementById("statusMabit").value,
-        statusTahsin: document.getElementById("statusTahsin").value,
-        statusHafalan: document.getElementById("statusHafalan").value,
-        catatanKendala: document.getElementById("catatanKendala").value,
-        updatedAt: new Date().toLocaleDateString("id-ID"),
-        score: calculateScoreFromInputs()
-      };
-
-      try {
-        await fetch(DEFAULT_SCRIPT_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify(payload)
-        });
-        
-        showToast("✅ Data Mutabaah Berhasil Disimpan!");
-        setTimeout(() => fetchDataFromCloud(), 1200);
-      } catch (err) {
-        showToast("❌ Gagal menyimpan data ke Cloud!", "error");
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up text-lg"></i> Simpan Ke Database Cloud`;
-      }
-    }
-
-    // FITUR BARU: KIRIM REKAP KE WHATSAPP
-    function shareToWhatsApp() {
-      let mergedData = getMergedKaderData();
-      let sorted = mergedData.sort((a,b) => (b.score || 0) - (a.score || 0));
-
-      let totalScore = 0;
-      let totalTilawah = 0;
-      let totalSholat = 0;
-
-      sorted.forEach(d => {
-        totalScore += (d.score || 0);
-        totalTilawah += (parseFloat(d.tilawahJuz) || 0);
-        totalSholat += (parseInt(d.sholatMasjid) || 0);
-      });
-
-      const avgTilawah = sorted.length > 0 ? (totalTilawah / sorted.length).toFixed(1) : 0;
-
-      let text = `📊 *REKAP MUTABAAH LINGKAR BERTUMBUH*\n`;
-      text += `📅 *Tanggal:* ${new Date().toLocaleDateString('id-ID')}\n`;
-      text += `👤 *Murabbi:* Rio Friyadi\n`;
-      text += `------------------------------------\n\n`;
-
-      text += `📈 *RINGKASAN KELOMPOK:*\n`;
-      text += `• Total Poin: *${totalScore} pts*\n`;
-      text += `• Rata-rata Tilawah: *${avgTilawah} Juz*\n`;
-      text += `• Total Jamaah Masjid: *${totalSholat} Waktu*\n\n`;
-
-      text += `🏆 *KLASEMEN AMALAN PEKANAN:*\n`;
-      sorted.forEach((item, idx) => {
-        let badge = idx === 0 ? "🥇" : idx === 1 ? "🥈" : idx === 2 ? "🥉" : "•";
-        text += `${badge} *${item.user}*: ${item.score || 0} pts (📖 ${item.tilawahJuz || 0} Juz | 🕌 ${item.sholatMasjid || 0} Waktu)\n`;
-      });
-
-      let hasCatatan = sorted.some(i => i.catatanKendala && i.catatanKendala.trim() !== "");
-      if(hasCatatan) {
-        text += `\n💬 *CATATAN / EVALUASI KADER:*\n`;
-        sorted.forEach(item => {
-          if(item.catatanKendala && item.catatanKendala.trim() !== "") {
-            text += `_ ${item.user}_: "${item.catatanKendala}"\n`;
-          }
-        });
-      }
-
-      text += `\n✨ *Fastabiqul Khairat! Tetap Semangat Bertumbuh.*`;
-
-      const waUrl = "https://api.whatsapp.com/send?text=" + encodeURIComponent(text);
-      window.open(waUrl, "_blank");
-    }
-
-    // FITUR BARU: RESET LEADERBOARD
-    async function resetLeaderboard() {
-      if(!confirm("⚠️ APAKAH ANDA YAKIN?\nSeluruh poin dan rekaman amalan pekanan ini akan DI-RESET MENJADI 0 untuk semua anggota!")) {
-        return;
-      }
-
-      dbData = KADER_LIST.map(name => ({
-        user: name,
-        score: 0,
-        tilawahJuz: 0,
-        sholatMasjid: 0,
-        dhuhaHari: 0,
-        tahajudHari: 0,
-        catatanKendala: "",
-        statusTasqif: "Belum Ada",
-        statusMabit: "Belum Ada",
-        statusTahsin: "Belum Setoran",
-        statusHafalan: "Belum Setor"
-      }));
-
-      saveLocalDataCache(dbData);
-      renderLeaderboard();
-      renderRekap();
-      onUserSelectChange();
-
-      showToast("⏳ Memproses Reset di Database Cloud...");
-
-      try {
-        await fetch(DEFAULT_SCRIPT_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify({ action: "resetAll", resetData: dbData })
-        });
-        showToast("✅ Leaderboard Berhasil Di-Reset!");
-      } catch (err) {
-        showToast("⚠️ Reset tersimpan secara lokal.", "error");
-      }
-    }
-
-    function showToast(msg, type = "success") {
-      const container = document.getElementById("toastContainer");
-      const toast = document.createElement("div");
-      
-      const bgClass = type === "error" 
-        ? "bg-rose-500 text-white" 
-        : "bg-gradient-to-r from-brand-500 to-emerald-400 text-dark-950 font-black";
-
-      toast.className = `${bgClass} text-xs px-4 py-3 rounded-2xl shadow-2xl transition duration-300 pointer-events-auto flex items-center gap-2 border border-white/20`;
-      toast.innerHTML = msg;
-      container.appendChild(toast);
-      
-      setTimeout(() => {
-        toast.style.opacity = "0";
-        setTimeout(() => toast.remove(), 300);
-      }, 3500);
-    }
-  </script>
-</body>
-</html>
+      <!-- REKAP PER KADER -->
+      <div class="glass-card p-5 md:p-6 rounded-3xl sh
