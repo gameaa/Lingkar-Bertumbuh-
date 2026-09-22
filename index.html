@@ -24,7 +24,7 @@
     body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    .glass-card { background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    .glass-card { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
     .glass-input { background: rgba(2, 6, 23, 0.7); border: 1px solid rgba(255, 255, 255, 0.12); }
     .glass-input:focus { border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
     .gold-gradient { background: linear-gradient(135deg, #fef08a 0%, #facc15 50%, #eab308 100%); }
@@ -41,7 +41,7 @@
   <div class="fixed top-20 left-[-10%] w-96 h-96 bg-brand-500/10 rounded-full blur-[120px] pointer-events-none -z-10"></div>
   <div class="fixed top-40 right-[-10%] w-[30rem] h-[30rem] bg-amber-500/10 rounded-full blur-[140px] pointer-events-none -z-10"></div>
 
-  <!-- TOAST CONTAINER -->
+  <!-- TOAST NOTIFICATION CONTAINER -->
   <div id="toastContainer" class="fixed top-5 right-4 left-4 md:left-auto z-50 flex flex-col gap-2.5 pointer-events-none"></div>
 
   <!-- HEADER NAVBAR -->
@@ -97,7 +97,7 @@
           <span id="syncPing" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
           <span id="syncDot" class="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-500"></span>
         </span>
-        <span id="syncStatusText" class="truncate text-slate-200">Database Sync: Memuat Data...</span>
+        <span id="syncStatusText" class="truncate text-slate-200">Database Sync: Siap</span>
       </div>
       <button onclick="fetchDataFromCloud()" class="bg-slate-800/80 hover:bg-slate-700 active:scale-95 text-slate-100 font-bold px-3 py-1.5 rounded-xl border border-slate-700 transition flex items-center gap-1.5 shrink-0 text-[11px]">
         <i class="fa-solid fa-rotate text-brand-400" id="syncIcon"></i> Refresh
@@ -117,13 +117,13 @@
         </div>
 
         <!-- PODIUM TOP 3 -->
-        <div id="podiumSection" class="grid grid-cols-3 gap-2 md:gap-4 mb-8 items-end min-h-[210px]">
-          <!-- Dynamic Podium Loaded via JS -->
+        <div id="podiumSection" class="grid grid-cols-3 gap-2 md:gap-4 mb-8 items-end min-h-[200px]">
+          <!-- Loaded dynamically via JS -->
         </div>
 
         <!-- KLASEMEN LENGKAP -->
         <div class="space-y-3" id="rankingList">
-          <!-- Dynamic Leaderboard Loaded via JS -->
+          <!-- Loaded dynamically via JS -->
         </div>
       </div>
     </section>
@@ -310,6 +310,17 @@
     <!-- ================= TAB 3: REKAP MURABBI ================= -->
     <section id="tabDashboard" class="tab-content hidden space-y-5">
       
+      <!-- ACTION TOOLBAR: SHARE WA -->
+      <div class="flex justify-between items-center bg-gradient-to-r from-emerald-950 to-slate-900 p-4 rounded-3xl border border-emerald-500/30 shadow-xl">
+        <div>
+          <h3 class="font-extrabold text-sm text-white">Evaluasi & Rekap Kelompok</h3>
+          <p class="text-[11px] text-slate-400">Kirim laporan rangkuman langsung ke WhatsApp</p>
+        </div>
+        <button onclick="shareToWhatsApp()" class="bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 font-black text-xs px-4 py-2.5 rounded-2xl shadow-lg glow-emerald transition flex items-center gap-2 shrink-0">
+          <i class="fa-brands fa-whatsapp text-lg"></i> Kirim ke WA
+        </button>
+      </div>
+
       <!-- STATS OVERVIEW CARDS -->
       <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
         <div class="glass-card p-4 rounded-2xl border border-white/5">
@@ -339,6 +350,22 @@
     <!-- ================= TAB 4: KELOLA SISTEM (ADMIN) ================= -->
     <section id="tabAdmin" class="tab-content hidden space-y-5">
       
+      <!-- RESET LEADERBOARD PANEL (FITUR BARU) -->
+      <div class="glass-card p-5 md:p-6 rounded-3xl shadow-xl space-y-3 border-l-4 border-l-rose-500">
+        <div class="flex items-center justify-between">
+          <h3 class="font-black text-slate-100 text-base flex items-center gap-2">
+            <i class="fa-solid fa-arrows-rotate text-rose-400"></i> Reset Leaderboard / Poin
+          </h3>
+          <span class="text-[10px] font-extrabold bg-rose-500/20 text-rose-400 px-2.5 py-1 rounded-full border border-rose-500/30">Khusus Murabbi</span>
+        </div>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Gunakan tombol ini setiap akhir pekan atau akhir bulan untuk mengosongkan/mereset seluruh poin amalan anggota kembali menjadi 0.
+        </p>
+        <button onclick="resetLeaderboard()" class="w-full bg-rose-600/20 hover:bg-rose-600/30 active:scale-95 text-rose-300 font-extrabold py-3 px-4 rounded-2xl border border-rose-500/40 transition flex items-center justify-center gap-2 text-xs">
+          <i class="fa-solid fa-trash-can"></i> Reset Seluruh Poin Pekanan Ini
+        </button>
+      </div>
+
       <!-- KELOLA ANGGOTA KELOMPOK -->
       <div class="glass-card p-5 md:p-6 rounded-3xl shadow-xl space-y-4 border-l-4 border-l-brand-500">
         <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -367,20 +394,19 @@
         </div>
       </div>
 
-      <!-- DATABASE LINK & PIN INFO -->
+      <!-- DATABASE LINK INFO -->
       <div class="glass-card p-5 md:p-6 rounded-3xl shadow-xl space-y-4">
         <h3 class="font-black text-amber-400 text-base flex items-center gap-2">
-          <i class="fa-solid fa-sliders"></i> Pengaturan Sistem Database
+          <i class="fa-solid fa-sliders"></i> Info Database Backend
         </h3>
         <div>
-          <label class="font-bold text-xs text-slate-300 block mb-1">Link Apps Script Backend</label>
+          <label class="font-bold text-xs text-slate-300 block mb-1">Link Apps Script Active</label>
           <input type="text" readonly class="w-full p-3 text-xs bg-dark-950 border border-slate-800 text-slate-400 rounded-xl outline-none font-mono" value="https://script.google.com/macros/s/AKfycbzJkZFLvkQg-0167sRWk-rKlruw7DPP150zzyicVYX14O4qmV2-tqGV4iEHHwFoqf6i/exec">
           <p class="text-[11px] text-emerald-400 mt-1.5 font-bold">✅ Database terhubung otomatis!</p>
         </div>
         <div class="p-4 bg-slate-900/90 rounded-2xl border border-slate-800 text-xs text-slate-300 space-y-1.5">
-          <p class="font-bold text-amber-400">ℹ️ Info Akses Admin:</p>
+          <p class="font-bold text-amber-400">ℹ️ Akses Admin PIN:</p>
           <p>- PIN Default: <b class="text-white bg-slate-800 px-2 py-0.5 rounded font-mono">1234</b></p>
-          <p>- Anda dapat mengubah PIN ini langsung pada variabel JavaScript <code class="text-brand-400 font-mono">ADMIN_PIN</code>.</p>
         </div>
       </div>
 
@@ -406,12 +432,17 @@
     ];
 
     let KADER_LIST = JSON.parse(localStorage.getItem("kaderList")) || DEFAULT_KADER;
-    let dbData = [];
+    let dbData = JSON.parse(localStorage.getItem("mutabaahDataCache")) || [];
     let isAdmin = false;
 
+    // PAGE INITIALIZATION
     window.addEventListener("DOMContentLoaded", () => {
       updateUserDropdown();
       renderAdminMemberList();
+      // Render awal instan dari cache lokal (mencegah layar kosong/blank)
+      renderLeaderboard();
+      renderRekap();
+      // Ambil data terbaru dari cloud
       fetchDataFromCloud();
     });
 
@@ -421,6 +452,10 @@
       renderAdminMemberList();
       renderLeaderboard();
       renderRekap();
+    }
+
+    function saveLocalDataCache(data) {
+      localStorage.setItem("mutabaahDataCache", JSON.stringify(data));
     }
 
     // TAMBAH ANGGOTA BARU
@@ -445,7 +480,7 @@
       showToast(`✅ <b>${name}</b> berhasil ditambahkan!`);
     }
 
-    // KELUARKAN / HAPUS ANGGOTA
+    // KELUARKAN ANGGOTA
     function deleteKader(index) {
       const name = KADER_LIST[index];
       if (confirm(`Apakah Anda yakin ingin mengeluarkan "${name}" dari kelompok?`)) {
@@ -477,7 +512,7 @@
       onUserSelectChange();
     }
 
-    // OTO-LOAD DATA KETIKA PILIH ANGGOTA DI DROPDOWN (FIX BUG FORM)
+    // OTO-LOAD DATA KETIKA PILIH ANGGOTA DI DROPDOWN
     function onUserSelectChange() {
       const selectedUser = document.getElementById("userSelect").value;
       const found = dbData.find(d => d.user && d.user.trim().toLowerCase() === selectedUser.trim().toLowerCase());
@@ -510,7 +545,6 @@
       updateLiveScore();
     }
 
-    // RENDER MEMBER LIST DI TAB ADMIN WITH SEARCH FILTER
     function renderAdminMemberList() {
       const list = document.getElementById("adminMemberList");
       const badge = document.getElementById("memberCountBadge");
@@ -621,8 +655,10 @@
       
       try {
         const res = await fetch(DEFAULT_SCRIPT_URL);
+        if(!res.ok) throw new Error("HTTP error " + res.status);
         const data = await res.json();
         dbData = Array.isArray(data) ? data : [];
+        saveLocalDataCache(dbData);
         syncText.innerText = "Database Sync: Terhubung";
       } catch (err) {
         console.error(err);
@@ -638,19 +674,15 @@
     function getMergedKaderData() {
       return KADER_LIST.map(name => {
         const found = dbData.find(d => d.user && d.user.trim().toLowerCase() === name.trim().toLowerCase());
-        if (found) {
-          return found;
-        } else {
-          return {
-            user: name,
-            score: 0,
-            tilawahJuz: 0,
-            sholatMasjid: 0,
-            dhuhaHari: 0,
-            tahajudHari: 0,
-            catatanKendala: ""
-          };
-        }
+        return found || {
+          user: name,
+          score: 0,
+          tilawahJuz: 0,
+          sholatMasjid: 0,
+          dhuhaHari: 0,
+          tahajudHari: 0,
+          catatanKendala: ""
+        };
       });
     }
 
@@ -686,7 +718,7 @@
             <div class="w-full bg-amber-500/10 h-28 rounded-t-2xl mt-2 border-t-2 border-amber-400/60 flex items-center justify-center text-2xl shadow-inner">🥇</div>
           </div>
         `;
-      }
+      } else { podiumHTML += `<div></div>`; }
 
       // RANK 3
       if(sorted[2]) {
@@ -725,7 +757,6 @@
       const container = document.getElementById("rekapContainer");
       let mergedData = getMergedKaderData();
 
-      // CALCULATE STATS OVERVIEW
       let totalScore = 0;
       let totalTilawah = 0;
       let totalSholat = 0;
@@ -742,7 +773,6 @@
       document.getElementById("statAvgTilawah").innerText = `${avgTilawah} Juz`;
       document.getElementById("statTotalSholat").innerText = `${totalSholat} Waktu`;
 
-      // RENDER MEMBER CARDS
       let html = "";
       mergedData.forEach(item => {
         const tilawahPct = Math.min(100, Math.round(((item.tilawahJuz || 0) / 3.5) * 100));
@@ -793,6 +823,7 @@
       container.innerHTML = html;
     }
 
+    // FITUR SIMPAN DATA MUTABAAH
     async function saveMutabaah(e) {
       e.preventDefault();
       const btn = document.getElementById("btnSaveMutabaah");
@@ -830,6 +861,94 @@
       } finally {
         btn.disabled = false;
         btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up text-lg"></i> Simpan Ke Database Cloud`;
+      }
+    }
+
+    // FITUR BARU: KIRIM REKAP KE WHATSAPP
+    function shareToWhatsApp() {
+      let mergedData = getMergedKaderData();
+      let sorted = mergedData.sort((a,b) => (b.score || 0) - (a.score || 0));
+
+      let totalScore = 0;
+      let totalTilawah = 0;
+      let totalSholat = 0;
+
+      sorted.forEach(d => {
+        totalScore += (d.score || 0);
+        totalTilawah += (parseFloat(d.tilawahJuz) || 0);
+        totalSholat += (parseInt(d.sholatMasjid) || 0);
+      });
+
+      const avgTilawah = sorted.length > 0 ? (totalTilawah / sorted.length).toFixed(1) : 0;
+
+      let text = `📊 *REKAP MUTABAAH LINGKAR BERTUMBUH*\n`;
+      text += `📅 *Tanggal:* ${new Date().toLocaleDateString('id-ID')}\n`;
+      text += `👤 *Murabbi:* Rio Friyadi\n`;
+      text += `------------------------------------\n\n`;
+
+      text += `📈 *RINGKASAN KELOMPOK:*\n`;
+      text += `• Total Poin: *${totalScore} pts*\n`;
+      text += `• Rata-rata Tilawah: *${avgTilawah} Juz*\n`;
+      text += `• Total Jamaah Masjid: *${totalSholat} Waktu*\n\n`;
+
+      text += `🏆 *KLASEMEN AMALAN PEKANAN:*\n`;
+      sorted.forEach((item, idx) => {
+        let badge = idx === 0 ? "🥇" : idx === 1 ? "🥈" : idx === 2 ? "🥉" : "•";
+        text += `${badge} *${item.user}*: ${item.score || 0} pts (📖 ${item.tilawahJuz || 0} Juz | 🕌 ${item.sholatMasjid || 0} Waktu)\n`;
+      });
+
+      let hasCatatan = sorted.some(i => i.catatanKendala && i.catatanKendala.trim() !== "");
+      if(hasCatatan) {
+        text += `\n💬 *CATATAN / EVALUASI KADER:*\n`;
+        sorted.forEach(item => {
+          if(item.catatanKendala && item.catatanKendala.trim() !== "") {
+            text += `_ ${item.user}_: "${item.catatanKendala}"\n`;
+          }
+        });
+      }
+
+      text += `\n✨ *Fastabiqul Khairat! Tetap Semangat Bertumbuh.*`;
+
+      const waUrl = "https://api.whatsapp.com/send?text=" + encodeURIComponent(text);
+      window.open(waUrl, "_blank");
+    }
+
+    // FITUR BARU: RESET LEADERBOARD
+    async function resetLeaderboard() {
+      if(!confirm("⚠️ APAKAH ANDA YAKIN?\nSeluruh poin dan rekaman amalan pekanan ini akan DI-RESET MENJADI 0 untuk semua anggota!")) {
+        return;
+      }
+
+      dbData = KADER_LIST.map(name => ({
+        user: name,
+        score: 0,
+        tilawahJuz: 0,
+        sholatMasjid: 0,
+        dhuhaHari: 0,
+        tahajudHari: 0,
+        catatanKendala: "",
+        statusTasqif: "Belum Ada",
+        statusMabit: "Belum Ada",
+        statusTahsin: "Belum Setoran",
+        statusHafalan: "Belum Setor"
+      }));
+
+      saveLocalDataCache(dbData);
+      renderLeaderboard();
+      renderRekap();
+      onUserSelectChange();
+
+      showToast("⏳ Memproses Reset di Database Cloud...");
+
+      try {
+        await fetch(DEFAULT_SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({ action: "resetAll", resetData: dbData })
+        });
+        showToast("✅ Leaderboard Berhasil Di-Reset!");
+      } catch (err) {
+        showToast("⚠️ Reset tersimpan secara lokal.", "error");
       }
     }
 
